@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  editor
+  viewer
+}
+
+enum SettingScope {
+  agency
+  user
+}
+
+enum Provider {
+  openai
+  gemini
+  claude
+}
+
+enum RunStatus {
+  success
+  error
+}
+
+model User {
+  id             String            @id @default(cuid())
+  name           String?
+  email          String            @unique
+  emailVerified  DateTime?
+  image          String?
+  role           UserRole          @default(editor)
+  isActive       Boolean           @default(true)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  settings       ProviderSetting[] @relation("user_settings")
+  createdKeys    ProviderSetting[] @relation("created_by")
+  runs           ToolRun[]
+  auditEvents    AuditEvent[]      @relation("actor")
+  accounts       Account[]
+  sessions       Session[]
+}
+
+model ProviderSetting {
+  id              String       @id @default(cuid())
+  scope           SettingScope
+  userId          String?
+  provider        Provider
+  encryptedApiKey String?
+  isEnabled       Boolean      @default(true)
+  createdById     String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  user            User?        @relation("user_settings", fields: [userId], references: [id], onDelete: Cascade)
+  createdBy       User?        @relation("created_by", fields: [createdById], references: [id])
+
+  @@unique([scope, userId, provider])
+}
+
+model ToolRun {
+  id           String   @id @default(cuid())
+  userId       String
+  toolName     String
+  model        String
+  inputJson    Json
+  outputText   String?
+  status       RunStatus @default(success)
+  errorMessage String?
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([toolName, createdAt(sort: Desc)])
+}
+
+model AuditEvent {
+  id          String   @id @default(cuid())
+  actorUserId String?
+  eventType   String
+  entityType  String?
+  entityId    String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  actor       User?    @relation("actor", fields: [actorUserId], references: [id])
+
+  @@index([createdAt(sort: Desc)])
+  @@index([actorUserId, createdAt(sort: Desc)])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

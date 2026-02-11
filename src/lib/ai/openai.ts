@@ -1,0 +1,30 @@
+export async function callOpenAiApi(apiKey: string, prompt: string): Promise<string> {
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: "gpt-5",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 1
+    })
+  });
+
+  const raw = await response.text();
+  let data: any;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    throw new Error(`OpenAI returned invalid JSON (${response.status}).`);
+  }
+
+  if (!response.ok) {
+    throw new Error(data?.error?.message ?? `OpenAI API error (${response.status}).`);
+  }
+
+  const text = data?.choices?.[0]?.message?.content;
+  if (!text) throw new Error("OpenAI returned an empty response.");
+  return String(text).trim();
+}
