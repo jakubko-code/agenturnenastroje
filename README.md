@@ -92,3 +92,17 @@ limit 30;
 - Provider calls run server-side only.
 - Rate limiting is in-memory for MVP (replace with Redis/Upstash in multi-instance deployment).
 - This is MVP foundation for migrating remaining tools.
+
+## History Retention
+Recent generation history stays in `ToolRun`. For long-term storage, archive old rows into `ToolRunArchive`.
+
+Run archive job manually:
+```bash
+npm run retention:archive
+```
+
+Useful env flags:
+- `RETENTION_DAYS` (default `90`)
+- `ARCHIVE_BATCH_SIZE` (default `250`)
+- `ARCHIVE_MAX_BATCHES` (default `50`)
+- `ARCHIVE_DRY_RUN=true` to preview counts without moving data

@@ -1,19 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 type Row = {
   id: string;
   toolName: string;
+  provider?: string | null;
   model: string;
   status: string;
   createdAt: string;
+  inputTokens?: number | null;
+  outputTokens?: number | null;
+  totalTokens?: number | null;
+  estimatedCostUsd?: number | null;
+  outputText?: string | null;
   errorMessage?: string | null;
 };
 
 export function HistoryTable() {
   const [rows, setRows] = useState<Row[]>([]);
   const [error, setError] = useState("");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/history")
@@ -38,21 +45,51 @@ export function HistoryTable() {
           <tr>
             <th>Cas</th>
             <th>Nastroj</th>
-            <th>Model</th>
+            <th>Provider / model</th>
+            <th>Tokeny</th>
+            <th>Odhad ceny</th>
             <th>Status</th>
             <th>Chyba</th>
+            <th>Vystup</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={row.id}>
-              <td>{new Date(row.createdAt).toLocaleString()}</td>
-              <td>{row.toolName}</td>
-              <td>{row.model}</td>
-              <td>{row.status}</td>
-              <td>{row.errorMessage ?? ""}</td>
-            </tr>
-          ))}
+          {rows.map((row) => {
+            const isOpen = expandedId === row.id;
+            return (
+              <Fragment key={row.id}>
+                <tr>
+                  <td>{new Date(row.createdAt).toLocaleString()}</td>
+                  <td>{row.toolName}</td>
+                  <td>{row.provider ?? "-"} / {row.model}</td>
+                  <td>{row.totalTokens ?? "-"}</td>
+                  <td>{typeof row.estimatedCostUsd === "number" ? `$${row.estimatedCostUsd.toFixed(4)}` : "-"}</td>
+                  <td>{row.status}</td>
+                  <td>{row.errorMessage ?? ""}</td>
+                  <td>
+                    {row.outputText ? (
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => setExpandedId(isOpen ? null : row.id)}
+                      >
+                        {isOpen ? "Skryt" : "Zobrazit"}
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </td>
+                </tr>
+                {isOpen ? (
+                  <tr>
+                    <td colSpan={8}>
+                      <pre className="result-box">{row.outputText}</pre>
+                    </td>
+                  </tr>
+                ) : null}
+              </Fragment>
+            );
+          })}
         </tbody>
       </table>
     </div>

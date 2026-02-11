@@ -9,6 +9,8 @@ type ResponseShape = {
   error?: { code: string; message: string };
 };
 
+const CLIENT_TYPES = ["eshop", "sluzba"] as const;
+
 export function RsaForm() {
   const [model, setModel] = useState<Model>("gemini");
   const [loading, setLoading] = useState(false);
@@ -34,7 +36,7 @@ export function RsaForm() {
     setResult("");
 
     if (!formData.productService.trim() || !formData.keywords.trim()) {
-      setError("Povinne polia: produkt/sluzba a klucove slova.");
+      setError("Prosim, vypln minimalne: Produkt/sluzba a Hladane vyrazy.");
       return;
     }
 
@@ -66,72 +68,98 @@ export function RsaForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="stack">
-      <label>
-        Model
-        <select value={model} onChange={(e) => setModel(e.target.value as Model)}>
-          <option value="gemini">Gemini 2.5 Pro</option>
-          <option value="openai">GPT-5</option>
-          <option value="claude">Claude Sonnet</option>
-        </select>
-      </label>
+    <form onSubmit={onSubmit} className="tool-stack">
+      <section className="card tool-main-card">
+        <label>Typ klienta:</label>
+        <div className="chip-group">
+          {CLIENT_TYPES.map((value) => (
+            <button
+              key={value}
+              type="button"
+              className={formData.clientType === value ? "chip-btn is-selected" : "chip-btn"}
+              onClick={() => setField("clientType", value)}
+            >
+              {value === "eshop" ? "E-shop" : "Sluzba"}
+            </button>
+          ))}
+        </div>
 
-      <label>
-        Typ klienta
-        <select value={formData.clientType} onChange={(e) => setField("clientType", e.target.value)}>
-          <option value="eshop">E-shop</option>
-          <option value="sluzba">Sluzba</option>
-        </select>
-      </label>
+        <label>
+          Produkt/sluzba: <span className="required-mark">*</span>
+          <textarea value={formData.productService} onChange={(e) => setField("productService", e.target.value)} />
+        </label>
 
-      <label>
-        Produkt/sluzba *
-        <textarea value={formData.productService} onChange={(e) => setField("productService", e.target.value)} />
-      </label>
+        <label>
+          Cielova skupina:
+          <textarea value={formData.targetAudience} onChange={(e) => setField("targetAudience", e.target.value)} />
+        </label>
 
-      <label>
-        Klucove slova *
-        <textarea value={formData.keywords} onChange={(e) => setField("keywords", e.target.value)} />
-      </label>
+        <label>
+          Hladane vyrazy, na ktore cielis: <span className="required-mark">*</span>
+          <textarea value={formData.keywords} onChange={(e) => setField("keywords", e.target.value)} />
+        </label>
 
-      <label>
-        Cielova skupina
-        <textarea value={formData.targetAudience} onChange={(e) => setField("targetAudience", e.target.value)} />
-      </label>
+        <label>
+          Hlavne predajne argumenty (USP):
+          <textarea value={formData.usp} onChange={(e) => setField("usp", e.target.value)} />
+        </label>
 
-      <label>
-        USP
-        <textarea value={formData.usp} onChange={(e) => setField("usp", e.target.value)} />
-      </label>
+        <label>
+          Signaly doveryhodnosti:
+          <textarea value={formData.trustSignals} onChange={(e) => setField("trustSignals", e.target.value)} />
+        </label>
 
-      <label>
-        Signaly dovery
-        <textarea value={formData.trustSignals} onChange={(e) => setField("trustSignals", e.target.value)} />
-      </label>
+        <label>
+          Najcastejsie namietky zakaznikov:
+          <textarea value={formData.objections} onChange={(e) => setField("objections", e.target.value)} />
+        </label>
 
-      <label>
-        Namietky
-        <textarea value={formData.objections} onChange={(e) => setField("objections", e.target.value)} />
-      </label>
+        <label>
+          Spustace urgencie / CTA:
+          <textarea value={formData.cta} onChange={(e) => setField("cta", e.target.value)} />
+        </label>
 
-      <label>
-        CTA
-        <textarea value={formData.cta} onChange={(e) => setField("cta", e.target.value)} />
-      </label>
+        <label>
+          Ton komunikacie:
+          <input value={formData.tone} onChange={(e) => setField("tone", e.target.value)} />
+        </label>
 
-      <label>
-        Ton
-        <input value={formData.tone} onChange={(e) => setField("tone", e.target.value)} />
-      </label>
+        <label>
+          URL webu:
+          <input value={formData.url} onChange={(e) => setField("url", e.target.value)} />
+        </label>
+      </section>
 
-      <label>
-        URL
-        <input value={formData.url} onChange={(e) => setField("url", e.target.value)} />
-      </label>
+      <section className="card generation-card">
+        <label>Zvol si model:</label>
+        <div className="model-button-group">
+          <button
+            type="button"
+            className={model === "gemini" ? "model-btn is-selected" : "model-btn"}
+            onClick={() => setModel("gemini")}
+          >
+            Gemini 2.5 PRO
+          </button>
+          <button
+            type="button"
+            className={model === "openai" ? "model-btn is-selected" : "model-btn"}
+            onClick={() => setModel("openai")}
+          >
+            GPT-5
+          </button>
+          <button
+            type="button"
+            className={model === "claude" ? "model-btn is-selected" : "model-btn"}
+            onClick={() => setModel("claude")}
+          >
+            Claude 3.5 Sonnet
+          </button>
+        </div>
 
-      <button className="btn" type="submit" disabled={loading}>
-        {loading ? "Generujem..." : "Vytvorit RSA"}
-      </button>
+        <button className="btn create-btn" type="submit" disabled={loading}>
+          {loading ? "GENERUJEM..." : "VYTVORIT TEXTY"}
+        </button>
+      </section>
 
       {error ? <p className="error-box">{error}</p> : null}
       {result ? <pre className="result-box">{result}</pre> : null}

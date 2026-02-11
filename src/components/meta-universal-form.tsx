@@ -9,6 +9,24 @@ type ResponseShape = {
   error?: { code: string; message: string };
 };
 
+const BUSINESS_TYPES = [
+  "B2B (predaj firmam)",
+  "B2C (koncovi zakaznici)",
+  "E-shop",
+  "Sluzba",
+  "Lokalny biznis",
+  "Ine / specificke"
+] as const;
+
+const CAMPAIGN_GOALS = [
+  "Predaj / nakupy",
+  "Leady / dopyty / formulare",
+  "Rezervacie / objednanie terminu",
+  "Navstevnost webu",
+  "Brand awareness / engagement",
+  "Navstevy prevadzky / lokalny biznis"
+] as const;
+
 export function MetaUniversalForm() {
   const [model, setModel] = useState<Model>("gemini");
   const [loading, setLoading] = useState(false);
@@ -35,7 +53,7 @@ export function MetaUniversalForm() {
     setResult("");
 
     if (!formData.offer.trim() || !formData.targetAudience.trim() || !formData.toneOfVoice.trim()) {
-      setError("Povinne polia: ponuka, cielova skupina a ton komunikacie.");
+      setError("Prosim, vypln minimalne: Popis ponuky, Cielovu skupinu a Ton komunikacie.");
       return;
     }
 
@@ -63,69 +81,112 @@ export function MetaUniversalForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="stack">
-      <label>
-        Model
-        <select value={model} onChange={(e) => setModel(e.target.value as Model)}>
-          <option value="gemini">Gemini 2.5 Pro</option>
-          <option value="openai">GPT-5</option>
-          <option value="claude">Claude Sonnet</option>
-        </select>
-      </label>
+    <form onSubmit={onSubmit} className="tool-stack">
+      <section className="card tool-main-card">
+        <label>Typ biznisu:</label>
+        <div className="chip-group">
+          {BUSINESS_TYPES.map((value) => (
+            <button
+              key={value}
+              type="button"
+              className={formData.businessType === value ? "chip-btn is-selected" : "chip-btn"}
+              onClick={() => setField("businessType", value)}
+            >
+              {value}
+            </button>
+          ))}
+        </div>
 
-      <label>
-        Typ biznisu
-        <select value={formData.businessType} onChange={(e) => setField("businessType", e.target.value)}>
-          <option value="">Vyber</option>
-          <option value="B2B">B2B</option>
-          <option value="B2C">B2C</option>
-          <option value="E-shop">E-shop</option>
-          <option value="Sluzba">Sluzba</option>
-          <option value="Lokalny biznis">Lokalny biznis</option>
-        </select>
-      </label>
+        <label>Hlavny ciel kampane v Meta Ads:</label>
+        <div className="chip-group">
+          {CAMPAIGN_GOALS.map((value) => (
+            <button
+              key={value}
+              type="button"
+              className={formData.campaignGoal === value ? "chip-btn is-selected" : "chip-btn"}
+              onClick={() => setField("campaignGoal", value)}
+            >
+              {value}
+            </button>
+          ))}
+        </div>
 
-      <label>
-        Hlavny ciel kampane
-        <select value={formData.campaignGoal} onChange={(e) => setField("campaignGoal", e.target.value)}>
-          <option value="">Vyber</option>
-          <option value="Predaj / nakupy">Predaj / nakupy</option>
-          <option value="Leady / dopyty / formulare">Leady / dopyty / formulare</option>
-          <option value="Rezervacie / objednanie terminu">Rezervacie / objednanie terminu</option>
-          <option value="Navstevnost webu">Navstevnost webu</option>
-          <option value="Brand awareness / engagement">Brand awareness / engagement</option>
-          <option value="Navstevy prevadzky">Navstevy prevadzky</option>
-        </select>
-      </label>
+        <label>
+          Popis ponuky (sluzba/produkt/benefit): <span className="required-mark">*</span>
+          <textarea
+            value={formData.offer}
+            onChange={(e) => setField("offer", e.target.value)}
+            placeholder="Strucne, ale vystizne popis, co ponukate. Co presne klient ziska, aky problem riesite, ake su hlavne benefity."
+          />
+        </label>
 
-      <label>
-        Popis ponuky *
-        <textarea value={formData.offer} onChange={(e) => setField("offer", e.target.value)} />
-      </label>
+        <label>
+          Cielova skupina: <span className="required-mark">*</span>
+          <textarea
+            value={formData.targetAudience}
+            onChange={(e) => setField("targetAudience", e.target.value)}
+            placeholder="Kto su, v akej situacii su, co riesia, co chcu dosiahnut. Mozes sem vlozit vystup z nastroja Definovanie cielovej skupiny."
+          />
+        </label>
 
-      <label>
-        Cielova skupina *
-        <textarea value={formData.targetAudience} onChange={(e) => setField("targetAudience", e.target.value)} />
-      </label>
+        <label>
+          Ton komunikacie (tone-of-voice): <span className="required-mark">*</span>
+          <input
+            value={formData.toneOfVoice}
+            onChange={(e) => setField("toneOfVoice", e.target.value)}
+            placeholder="napr. Profesionalny a vecny, Priatelsky a uvolneny, Expertne-poradensky, Odvazny a priamy..."
+          />
+        </label>
 
-      <label>
-        Ton komunikacie *
-        <input value={formData.toneOfVoice} onChange={(e) => setField("toneOfVoice", e.target.value)} />
-      </label>
+        <label>
+          URL landing page / webu (nepovinne):
+          <input
+            value={formData.url}
+            onChange={(e) => setField("url", e.target.value)}
+            placeholder="https://www.vas-web.sk/sluzba alebo landing page"
+          />
+        </label>
 
-      <label>
-        URL (nepovinne)
-        <input value={formData.url} onChange={(e) => setField("url", e.target.value)} />
-      </label>
+        <label>
+          Specifika kampane / poznamky (nepovinne):
+          <textarea
+            value={formData.notes}
+            onChange={(e) => setField("notes", e.target.value)}
+            placeholder="napr. prebiehajuca akcia, obmedzena kapacita, unikatne odlisnie, info o referenciach..."
+          />
+        </label>
+      </section>
 
-      <label>
-        Poznamky (nepovinne)
-        <textarea value={formData.notes} onChange={(e) => setField("notes", e.target.value)} />
-      </label>
+      <section className="card generation-card">
+        <label>Zvol si model:</label>
+        <div className="model-button-group">
+          <button
+            type="button"
+            className={model === "gemini" ? "model-btn is-selected" : "model-btn"}
+            onClick={() => setModel("gemini")}
+          >
+            Gemini 2.5 PRO
+          </button>
+          <button
+            type="button"
+            className={model === "openai" ? "model-btn is-selected" : "model-btn"}
+            onClick={() => setModel("openai")}
+          >
+            GPT-5
+          </button>
+          <button
+            type="button"
+            className={model === "claude" ? "model-btn is-selected" : "model-btn"}
+            onClick={() => setModel("claude")}
+          >
+            Claude 3.5 Sonnet
+          </button>
+        </div>
 
-      <button className="btn" type="submit" disabled={loading}>
-        {loading ? "Generujem..." : "Vytvorit Meta texty"}
-      </button>
+        <button className="btn create-btn" type="submit" disabled={loading}>
+          {loading ? "GENERUJEM..." : "VYTVORIT TEXTY"}
+        </button>
+      </section>
 
       {error ? <p className="error-box">{error}</p> : null}
       {result ? <pre className="result-box">{result}</pre> : null}

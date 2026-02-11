@@ -1,4 +1,6 @@
-export async function callClaudeApi(apiKey: string, prompt: string): Promise<string> {
+import { AIResult } from "@/types/ai";
+
+export async function callClaudeApi(apiKey: string, prompt: string): Promise<AIResult> {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -29,9 +31,19 @@ export async function callClaudeApi(apiKey: string, prompt: string): Promise<str
   const text = block?.text;
   if (!text) throw new Error("Claude returned an empty response.");
 
+  const inputTokens = Number.isFinite(data?.usage?.input_tokens) ? Number(data.usage.input_tokens) : null;
+  const outputTokens = Number.isFinite(data?.usage?.output_tokens) ? Number(data.usage.output_tokens) : null;
+  const totalTokens = inputTokens !== null && outputTokens !== null ? inputTokens + outputTokens : null;
+
   if (data?.stop_reason === "max_tokens") {
-    return `${String(text).trim()}\n\n[NOTE: output truncated by max token limit.]`;
+    return {
+      text: `${String(text).trim()}\n\n[NOTE: output truncated by max token limit.]`,
+      usage: { inputTokens, outputTokens, totalTokens }
+    };
   }
 
-  return String(text).trim();
+  return {
+    text: String(text).trim(),
+    usage: { inputTokens, outputTokens, totalTokens }
+  };
 }

@@ -67,9 +67,14 @@ model ToolRun {
   id           String   @id @default(cuid())
   userId       String
   toolName     String
+  provider     String?
   model        String
   inputJson    Json
   outputText   String?
+  inputTokens  Int?
+  outputTokens Int?
+  totalTokens  Int?
+  estimatedCostUsd Float?
   status       RunStatus @default(success)
   errorMessage String?
   createdAt    DateTime @default(now())
@@ -77,6 +82,29 @@ model ToolRun {
 
   @@index([userId, createdAt(sort: Desc)])
   @@index([toolName, createdAt(sort: Desc)])
+}
+
+model ToolRunArchive {
+  id               String   @id @default(cuid())
+  sourceRunId      String   @unique
+  userId           String
+  toolName         String
+  provider         String?
+  model            String
+  inputJson        Json
+  outputText       String?
+  inputTokens      Int?
+  outputTokens     Int?
+  totalTokens      Int?
+  estimatedCostUsd Float?
+  status           RunStatus @default(success)
+  errorMessage     String?
+  createdAt        DateTime
+  archivedAt       DateTime @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([toolName, createdAt(sort: Desc)])
+  @@index([archivedAt(sort: Desc)])
 }
 
 model AuditEvent {

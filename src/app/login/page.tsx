@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 export default async function LoginPage() {
   const session = await auth();
   if (session?.user?.id) {
-    redirect("/rsa");
+    redirect("/dashboard");
   }
 
   return (
@@ -15,7 +15,7 @@ export default async function LoginPage() {
         <form
           action={async () => {
             "use server";
-            await signIn("google", { redirectTo: "/rsa" });
+            await signIn("google", { redirectTo: "/dashboard" });
           }}
         >
           <button className="btn" type="submit">

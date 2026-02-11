@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
+import { TopNav } from "@/components/top-nav";
 
 export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -12,14 +12,15 @@ export default async function ProtectedLayout({ children }: { children: React.Re
   return (
     <div className="app-shell">
       <header className="topbar">
-        <nav>
-          <Link href="/rsa">RSA</Link>
-          <Link href="/meta-universal">Meta Universal</Link>
-          <Link href="/nastavenia">Nastavenia</Link>
-          <Link href="/historia">Historia</Link>
-        </nav>
+        <div className="brand-mark">
+          <span className="brand-dot" />
+          <span>agenturne nastroje</span>
+        </div>
+
+        <TopNav />
+
         <div className="topbar-right">
-          <span>{session.user.email}</span>
+          <span className="user-pill">{session.user.email}</span>
           <form
             action={async () => {
               "use server";

@@ -1,4 +1,6 @@
-export async function callGeminiApi(apiKey: string, prompt: string): Promise<string> {
+import { AIResult } from "@/types/ai";
+
+export async function callGeminiApi(apiKey: string, prompt: string): Promise<AIResult> {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`;
 
   const response = await fetch(url, {
@@ -28,5 +30,20 @@ export async function callGeminiApi(apiKey: string, prompt: string): Promise<str
 
   const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
   if (!text) throw new Error("Gemini returned an empty response.");
-  return String(text).trim();
+
+  const usageMeta = data?.usageMetadata ?? {};
+  const inputTokens = Number.isFinite(usageMeta?.promptTokenCount) ? Number(usageMeta.promptTokenCount) : null;
+  const outputTokens = Number.isFinite(usageMeta?.candidatesTokenCount)
+    ? Number(usageMeta.candidatesTokenCount)
+    : null;
+  const totalTokens = Number.isFinite(usageMeta?.totalTokenCount)
+    ? Number(usageMeta.totalTokenCount)
+    : inputTokens !== null && outputTokens !== null
+      ? inputTokens + outputTokens
+      : null;
+
+  return {
+    text: String(text).trim(),
+    usage: { inputTokens, outputTokens, totalTokens }
+  };
 }

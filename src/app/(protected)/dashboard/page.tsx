@@ -1,0 +1,60 @@
+import Link from "next/link";
+import type { Route } from "next";
+
+const toolCards = [
+  {
+    title: "RSA reklamy",
+    desc: "Tvorba 15 nadpisov a 5 popisov pre Google Ads RSA.",
+    href: "/rsa",
+    badge: "Google Ads"
+  },
+  {
+    title: "Meta Universal",
+    desc: "3 varianty primary textov pre B2B/B2C/sluzby a lokalny biznis.",
+    href: "/meta-universal",
+    badge: "Meta Ads"
+  },
+  {
+    title: "Nastavenia",
+    desc: "Sprava API klucov providerov a admin rol v jednej sekcii.",
+    href: "/nastavenia",
+    badge: "System"
+  },
+  {
+    title: "Historia",
+    desc: "Prehlad behov, modelov, statusov a chyb pri generovani.",
+    href: "/historia",
+    badge: "Monitoring"
+  }
+] as const satisfies ReadonlyArray<{
+  title: string;
+  desc: string;
+  href: Route;
+  badge: string;
+}>;
+
+export default function DashboardPage() {
+  return (
+    <section className="dashboard-shell">
+      <div className="hero-block">
+        <p className="hero-kicker">Agenturne AI studio</p>
+        <h1>Spustaj nastroje pre kampane z jedneho miesta</h1>
+        <p>
+          Vyber si nastroj, priprav brief a generuj vystupy pre Google Ads a Meta kampane.
+          Dashboard je navrhnuty pre rychlu internu produkciu v agenture.
+        </p>
+      </div>
+
+      <div className="tool-grid">
+        {toolCards.map((tool) => (
+          <Link key={tool.href} href={tool.href} className="tool-tile">
+            <span className="tool-badge">{tool.badge}</span>
+            <h3>{tool.title}</h3>
+            <p>{tool.desc}</p>
+            <span className="tool-cta">Otvorit nastroj</span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}

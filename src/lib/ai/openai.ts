@@ -1,4 +1,6 @@
-export async function callOpenAiApi(apiKey: string, prompt: string): Promise<string> {
+import { AIResult } from "@/types/ai";
+
+export async function callOpenAiApi(apiKey: string, prompt: string): Promise<AIResult> {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -26,5 +28,17 @@ export async function callOpenAiApi(apiKey: string, prompt: string): Promise<str
 
   const text = data?.choices?.[0]?.message?.content;
   if (!text) throw new Error("OpenAI returned an empty response.");
-  return String(text).trim();
+
+  const inputTokens = Number.isFinite(data?.usage?.prompt_tokens) ? Number(data.usage.prompt_tokens) : null;
+  const outputTokens = Number.isFinite(data?.usage?.completion_tokens) ? Number(data.usage.completion_tokens) : null;
+  const totalTokens = Number.isFinite(data?.usage?.total_tokens)
+    ? Number(data.usage.total_tokens)
+    : inputTokens !== null && outputTokens !== null
+      ? inputTokens + outputTokens
+      : null;
+
+  return {
+    text: String(text).trim(),
+    usage: { inputTokens, outputTokens, totalTokens }
+  };
 }
