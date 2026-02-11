@@ -4,7 +4,7 @@ export default function HistoriaPage() {
   return (
     <section className="tool-page">
       <div className="page-head">
-        <h1>Historia generovania</h1>
+        <h1>História generovania</h1>
         <p>
           Na tejto stránke nájdeš kompletnú históriu všetkých zadaní, ktoré si vytvoril pomocou našich AI nástrojov.
           Každé úspešné vygenerovanie sa automaticky a bezpečne uloží do tvojho osobného Google Sheet súboru s názvom

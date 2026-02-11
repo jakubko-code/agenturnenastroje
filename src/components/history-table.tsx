@@ -17,10 +17,17 @@ type Row = {
   errorMessage?: string | null;
 };
 
+function getToolDisplayName(toolName: string): string {
+  if (toolName === "meta_universal") return "Generovanie reklamných textov pre META Ads (AI)";
+  if (toolName === "rsa") return "Generovanie RSA reklám pre Google Ads (AI)";
+  return toolName;
+}
+
 export function HistoryTable() {
   const [rows, setRows] = useState<Row[]>([]);
   const [error, setError] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     fetch("/api/history")
@@ -42,42 +49,83 @@ export function HistoryTable() {
     return <p className="hint-text">Zatial tu nie su ziadne zaznamy historie.</p>;
   }
 
-  return (
-    <div className="history-accordion">
-      {rows.map((row) => {
-        const isOpen = expandedId === row.id;
-        return (
-          <Fragment key={row.id}>
-            <button
-              type="button"
-              className={isOpen ? "history-accordion-header is-open" : "history-accordion-header"}
-              onClick={() => setExpandedId(isOpen ? null : row.id)}
-            >
-              <div className="history-accordion-main">
-                <p className="history-title">
-                  {row.toolName} <span className="history-provider">({row.provider ?? "-"} / {row.model})</span>
-                </p>
-                <p className="history-meta">
-                  {new Date(row.createdAt).toLocaleString()} | tokeny: {row.totalTokens ?? "-"} | odhad:{" "}
-                  {typeof row.estimatedCostUsd === "number" ? `$${row.estimatedCostUsd.toFixed(4)}` : "-"} | status:{" "}
-                  {row.status}
-                </p>
-              </div>
-              <span className={isOpen ? "history-arrow is-open" : "history-arrow"}>▾</span>
-            </button>
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredRows =
+    normalizedQuery.length === 0
+      ? rows
+      : rows.filter((row) => {
+          const haystack = [
+            getToolDisplayName(row.toolName),
+            row.toolName,
+            row.provider ?? "",
+            row.model ?? "",
+            row.status ?? "",
+            row.outputText ?? "",
+            row.errorMessage ?? "",
+            new Date(row.createdAt).toLocaleString()
+          ]
+            .join(" ")
+            .toLowerCase();
+          return haystack.includes(normalizedQuery);
+        });
 
-            {isOpen ? (
-              <div className="history-accordion-body">
-                {row.errorMessage ? <p className="error-box">{row.errorMessage}</p> : null}
-                {row.outputText ? <pre className="result-box">{row.outputText}</pre> : <p className="hint-text">Bez vystupu.</p>}
-                <p className="history-token-detail">
-                  Input tokeny: {row.inputTokens ?? "-"} | Output tokeny: {row.outputTokens ?? "-"}
-                </p>
-              </div>
-            ) : null}
-          </Fragment>
-        );
-      })}
+  return (
+    <div className="stack">
+      <section className="card history-search-card">
+        <label htmlFor="history-search-input" className="history-search-label">
+          Vyhľadať v histórii:
+        </label>
+        <input
+          id="history-search-input"
+          type="text"
+          className="history-search-input"
+          placeholder="Zadaj slovo alebo frazu..."
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
+      </section>
+
+      {filteredRows.length === 0 ? (
+        <p className="hint-text">Pre zadany vyraz sa nenasli ziadne zaznamy.</p>
+      ) : (
+        <div className="history-accordion">
+          {filteredRows.map((row) => {
+            const isOpen = expandedId === row.id;
+            return (
+              <Fragment key={row.id}>
+                <button
+                  type="button"
+                  className={isOpen ? "history-accordion-header is-open" : "history-accordion-header"}
+                  onClick={() => setExpandedId(isOpen ? null : row.id)}
+                >
+                  <div className="history-accordion-main">
+                    <p className="history-title">
+                      {getToolDisplayName(row.toolName)}{" "}
+                      <span className="history-provider">({row.provider ?? "-"} / {row.model})</span>
+                    </p>
+                    <p className="history-meta">
+                      {new Date(row.createdAt).toLocaleString()} | tokeny: {row.totalTokens ?? "-"} | odhad:{" "}
+                      {typeof row.estimatedCostUsd === "number" ? `$${row.estimatedCostUsd.toFixed(4)}` : "-"} | status:{" "}
+                      {row.status}
+                    </p>
+                  </div>
+                  <span className={isOpen ? "history-arrow is-open" : "history-arrow"}>▾</span>
+                </button>
+
+                {isOpen ? (
+                  <div className="history-accordion-body">
+                    {row.errorMessage ? <p className="error-box">{row.errorMessage}</p> : null}
+                    {row.outputText ? <pre className="result-box">{row.outputText}</pre> : <p className="hint-text">Bez vystupu.</p>}
+                    <p className="history-token-detail">
+                      Input tokeny: {row.inputTokens ?? "-"} | Output tokeny: {row.outputTokens ?? "-"}
+                    </p>
+                  </div>
+                ) : null}
+              </Fragment>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

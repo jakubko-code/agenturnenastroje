@@ -132,7 +132,7 @@ export function AdminUsersManager() {
 
       <div className="button-row">
         <button type="button" className="btn btn-secondary" onClick={loadUsers}>
-          Obnovit zoznam
+          Obnoviť zoznam
         </button>
       </div>
     </div>

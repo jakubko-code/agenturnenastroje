@@ -6,7 +6,7 @@ type Status = {
   keys: { openai: boolean; gemini: boolean; claude: boolean };
 };
 
-export function SettingsForm() {
+export function SettingsForm({ canEdit }: { canEdit: boolean }) {
   const [status, setStatus] = useState<Status | null>(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -36,6 +36,11 @@ export function SettingsForm() {
     event.preventDefault();
     setMessage("");
     setError("");
+
+    if (!canEdit) {
+      setError("API kluce moze menit iba admin.");
+      return;
+    }
 
     const payload: { openaiApiKey?: string; geminiApiKey?: string; claudeApiKey?: string } = {};
     const openai = openaiApiKey.trim();
@@ -73,17 +78,11 @@ export function SettingsForm() {
 
   return (
     <div className="stack">
-      <div className="status-row">
-        <span>OpenAI: {status?.keys.openai ? "configured" : "missing"}</span>
-        <span>Gemini: {status?.keys.gemini ? "configured" : "missing"}</span>
-        <span>Claude: {status?.keys.claude ? "configured" : "missing"}</span>
-      </div>
-
       <form className="stack" onSubmit={onSubmit}>
         <label>
           OpenAI API key
           <span className={status?.keys.openai ? "provider-badge is-added" : "provider-badge"}>
-            {status?.keys.openai ? "Pridany" : "Chyba"}
+            {status?.keys.openai ? "Pridaný" : "Chýba"}
           </span>
           <input type="password" value={openaiApiKey} onChange={(e) => setOpenaiApiKey(e.target.value)} />
         </label>
@@ -91,7 +90,7 @@ export function SettingsForm() {
         <label>
           Gemini API key
           <span className={status?.keys.gemini ? "provider-badge is-added" : "provider-badge"}>
-            {status?.keys.gemini ? "Pridany" : "Chyba"}
+            {status?.keys.gemini ? "Pridaný" : "Chýba"}
           </span>
           <input type="password" value={geminiApiKey} onChange={(e) => setGeminiApiKey(e.target.value)} />
         </label>
@@ -99,14 +98,16 @@ export function SettingsForm() {
         <label>
           Claude API key
           <span className={status?.keys.claude ? "provider-badge is-added" : "provider-badge"}>
-            {status?.keys.claude ? "Pridany" : "Chyba"}
+            {status?.keys.claude ? "Pridaný" : "Chýba"}
           </span>
           <input type="password" value={claudeApiKey} onChange={(e) => setClaudeApiKey(e.target.value)} />
         </label>
 
-        <button className="btn create-btn settings-save-btn" type="submit">
-          Uložiť
-        </button>
+        {canEdit ? (
+          <button className="btn create-btn settings-save-btn" type="submit">
+            Uložiť
+          </button>
+        ) : null}
       </form>
 
       {message ? <p className="ok-box">{message}</p> : null}

@@ -386,6 +386,10 @@ body.is-scrolled .topbar {
   font-size: 24px;
 }
 
+.users-section-title {
+  margin-bottom: 12px;
+}
+
 .section-subtitle {
   margin: 8px 0 12px;
   color: var(--muted);
@@ -593,6 +597,10 @@ textarea::placeholder {
   color: #1f2737;
 }
 
+.btn-secondary:hover {
+  background: #dbe2eb;
+}
+
 .error-box,
 .ok-box,
 .result-box {
@@ -660,6 +668,28 @@ td {
 .history-accordion {
   display: grid;
   gap: 0;
+}
+
+.history-search-card {
+  gap: 0;
+  background: rgb(248, 249, 250);
+}
+
+.history-search-label {
+  display: block;
+  margin: 0 0 14px;
+}
+
+.history-search-input {
+  width: 100%;
+}
+
+.history-search-input::placeholder {
+  font-size: 14px;
+}
+
+.history-search-card + .history-accordion {
+  margin-top: 14px;
 }
 
 .history-accordion-header {

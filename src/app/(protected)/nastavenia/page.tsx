@@ -9,19 +9,18 @@ export default async function SettingsPage() {
     <section className="tool-page">
       <div className="page-head">
         <h1>Nastavenia</h1>
-        <p>Sprava API klucov a administracie pristupov na jednom mieste.</p>
+        <p>Správa API klúčov a používateľov.</p>
       </div>
 
       <section className="card">
-        <h2 className="section-title">API kluce</h2>
-        <p className="section-subtitle">Tato sekcia zapisuje agenturne provider kluce (admin only).</p>
-        <SettingsForm />
+        <h2 className="section-title">API kľúče</h2>
+        <p className="section-subtitle">Táto sekcia zapisuje agentúrne provider kľúče (iba admin)</p>
+        <SettingsForm canEdit={user.role === "admin"} />
       </section>
 
       {user.role === "admin" ? (
         <section className="card">
-          <h2 className="section-title">Admin - roly pouzivatelov</h2>
-          <p className="section-subtitle">Sprava rol: admin, editor, viewer.</p>
+          <h2 className="section-title users-section-title">Správa používateľov</h2>
           <AdminUsersManager />
         </section>
       ) : null}

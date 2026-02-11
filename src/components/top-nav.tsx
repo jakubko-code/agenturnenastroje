@@ -92,7 +92,7 @@ export function TopNav() {
       </div>
 
       <Link href="/historia" className={pathname === "/historia" ? "top-link is-active" : "top-link"}>
-        Historia
+        História generovania
       </Link>
     </nav>
   );
