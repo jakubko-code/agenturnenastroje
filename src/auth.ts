@@ -58,11 +58,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       });
     },
     async signOut(message) {
-      const tokenUser = message.token as { sub?: string; email?: string } | undefined;
+      const tokenUser =
+        "token" in message && message.token
+          ? (message.token as { sub?: string; email?: string })
+          : undefined;
+      const sessionUser =
+        "session" in message && message.session
+          ? (message.session as { user?: { email?: string } })
+          : undefined;
+
       await recordAuditEvent({
         actorUserId: tokenUser?.sub,
         eventType: "auth.sign_out",
-        metadata: { email: tokenUser?.email }
+        metadata: { email: tokenUser?.email ?? sessionUser?.user?.email }
       });
     }
   },
