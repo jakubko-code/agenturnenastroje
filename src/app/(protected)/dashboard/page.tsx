@@ -13,18 +13,6 @@ const toolCards = [
     desc: "3 varianty primary textov pre B2B/B2C/sluzby a lokalny biznis.",
     href: "/meta-universal",
     badge: "Meta Ads"
-  },
-  {
-    title: "Nastavenia",
-    desc: "Sprava API klucov providerov a admin rol v jednej sekcii.",
-    href: "/nastavenia",
-    badge: "System"
-  },
-  {
-    title: "Historia",
-    desc: "Prehlad behov, modelov, statusov a chyb pri generovani.",
-    href: "/historia",
-    badge: "Monitoring"
   }
 ] as const satisfies ReadonlyArray<{
   title: string;

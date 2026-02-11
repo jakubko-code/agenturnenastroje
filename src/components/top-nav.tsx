@@ -91,9 +91,6 @@ export function TopNav() {
         ) : null}
       </div>
 
-      <Link href="/nastavenia" className={pathname === "/nastavenia" ? "top-link is-active" : "top-link"}>
-        Nastavenia
-      </Link>
       <Link href="/historia" className={pathname === "/historia" ? "top-link is-active" : "top-link"}>
         Historia
       </Link>

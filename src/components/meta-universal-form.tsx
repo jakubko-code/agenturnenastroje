@@ -184,7 +184,7 @@ export function MetaUniversalForm() {
         </div>
 
         <button className="btn create-btn" type="submit" disabled={loading}>
-          {loading ? "GENERUJEM..." : "VYTVORIT TEXTY"}
+          {loading ? "GENERUJEM..." : "Generuj"}
         </button>
       </section>
 

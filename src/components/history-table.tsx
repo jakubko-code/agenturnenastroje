@@ -38,60 +38,46 @@ export function HistoryTable() {
     return <p className="error-box">{error}</p>;
   }
 
+  if (rows.length === 0) {
+    return <p className="hint-text">Zatial tu nie su ziadne zaznamy historie.</p>;
+  }
+
   return (
-    <div className="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Cas</th>
-            <th>Nastroj</th>
-            <th>Provider / model</th>
-            <th>Tokeny</th>
-            <th>Odhad ceny</th>
-            <th>Status</th>
-            <th>Chyba</th>
-            <th>Vystup</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => {
-            const isOpen = expandedId === row.id;
-            return (
-              <Fragment key={row.id}>
-                <tr>
-                  <td>{new Date(row.createdAt).toLocaleString()}</td>
-                  <td>{row.toolName}</td>
-                  <td>{row.provider ?? "-"} / {row.model}</td>
-                  <td>{row.totalTokens ?? "-"}</td>
-                  <td>{typeof row.estimatedCostUsd === "number" ? `$${row.estimatedCostUsd.toFixed(4)}` : "-"}</td>
-                  <td>{row.status}</td>
-                  <td>{row.errorMessage ?? ""}</td>
-                  <td>
-                    {row.outputText ? (
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        onClick={() => setExpandedId(isOpen ? null : row.id)}
-                      >
-                        {isOpen ? "Skryt" : "Zobrazit"}
-                      </button>
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                </tr>
-                {isOpen ? (
-                  <tr>
-                    <td colSpan={8}>
-                      <pre className="result-box">{row.outputText}</pre>
-                    </td>
-                  </tr>
-                ) : null}
-              </Fragment>
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="history-accordion">
+      {rows.map((row) => {
+        const isOpen = expandedId === row.id;
+        return (
+          <Fragment key={row.id}>
+            <button
+              type="button"
+              className={isOpen ? "history-accordion-header is-open" : "history-accordion-header"}
+              onClick={() => setExpandedId(isOpen ? null : row.id)}
+            >
+              <div className="history-accordion-main">
+                <p className="history-title">
+                  {row.toolName} <span className="history-provider">({row.provider ?? "-"} / {row.model})</span>
+                </p>
+                <p className="history-meta">
+                  {new Date(row.createdAt).toLocaleString()} | tokeny: {row.totalTokens ?? "-"} | odhad:{" "}
+                  {typeof row.estimatedCostUsd === "number" ? `$${row.estimatedCostUsd.toFixed(4)}` : "-"} | status:{" "}
+                  {row.status}
+                </p>
+              </div>
+              <span className={isOpen ? "history-arrow is-open" : "history-arrow"}>▾</span>
+            </button>
+
+            {isOpen ? (
+              <div className="history-accordion-body">
+                {row.errorMessage ? <p className="error-box">{row.errorMessage}</p> : null}
+                {row.outputText ? <pre className="result-box">{row.outputText}</pre> : <p className="hint-text">Bez vystupu.</p>}
+                <p className="history-token-detail">
+                  Input tokeny: {row.inputTokens ?? "-"} | Output tokeny: {row.outputTokens ?? "-"}
+                </p>
+              </div>
+            ) : null}
+          </Fragment>
+        );
+      })}
     </div>
   );
 }
