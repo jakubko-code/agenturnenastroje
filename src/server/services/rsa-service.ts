@@ -28,7 +28,7 @@ export async function generateRsaAds(args: {
       userId: args.userId,
       toolName: "rsa",
       provider: args.model,
-      model: args.model,
+      model: aiResult.model,
       inputJson: args.formData,
       outputText: aiResult.text,
       inputTokens: aiResult.usage.inputTokens,

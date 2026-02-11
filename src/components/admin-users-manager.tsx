@@ -90,12 +90,6 @@ export function AdminUsersManager() {
 
   return (
     <div className="stack">
-      <div className="button-row">
-        <button type="button" className="btn btn-secondary" onClick={loadUsers}>
-          Obnovit zoznam
-        </button>
-      </div>
-
       {info ? <p className="ok-box">{info}</p> : null}
       {error ? <p className="error-box">{error}</p> : null}
 
@@ -134,6 +128,12 @@ export function AdminUsersManager() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="button-row">
+        <button type="button" className="btn btn-secondary" onClick={loadUsers}>
+          Obnovit zoznam
+        </button>
       </div>
     </div>
   );

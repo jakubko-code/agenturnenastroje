@@ -1,7 +1,9 @@
 import { AIResult } from "@/types/ai";
 
+const GEMINI_MODEL = "gemini-2.5-pro";
+
 export async function callGeminiApi(apiKey: string, prompt: string): Promise<AIResult> {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
   const response = await fetch(url, {
     method: "POST",
@@ -43,6 +45,7 @@ export async function callGeminiApi(apiKey: string, prompt: string): Promise<AIR
       : null;
 
   return {
+    model: GEMINI_MODEL,
     text: String(text).trim(),
     usage: { inputTokens, outputTokens, totalTokens }
   };

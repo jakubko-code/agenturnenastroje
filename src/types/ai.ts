@@ -5,6 +5,7 @@ export type AIUsage = {
 };
 
 export type AIResult = {
+  model: string;
   text: string;
   usage: AIUsage;
 };

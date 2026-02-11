@@ -37,10 +37,24 @@ export function SettingsForm() {
     setMessage("");
     setError("");
 
+    const payload: { openaiApiKey?: string; geminiApiKey?: string; claudeApiKey?: string } = {};
+    const openai = openaiApiKey.trim();
+    const gemini = geminiApiKey.trim();
+    const claude = claudeApiKey.trim();
+
+    if (openai) payload.openaiApiKey = openai;
+    if (gemini) payload.geminiApiKey = gemini;
+    if (claude) payload.claudeApiKey = claude;
+
+    if (Object.keys(payload).length === 0) {
+      setError("Vypln aspon jeden API kluc na ulozenie.");
+      return;
+    }
+
     const response = await fetch("/api/settings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ openaiApiKey, geminiApiKey, claudeApiKey })
+      body: JSON.stringify(payload)
     });
 
     const data = await response.json();
@@ -68,21 +82,30 @@ export function SettingsForm() {
       <form className="stack" onSubmit={onSubmit}>
         <label>
           OpenAI API key
+          <span className={status?.keys.openai ? "provider-badge is-added" : "provider-badge"}>
+            {status?.keys.openai ? "Pridany" : "Chyba"}
+          </span>
           <input type="password" value={openaiApiKey} onChange={(e) => setOpenaiApiKey(e.target.value)} />
         </label>
 
         <label>
           Gemini API key
+          <span className={status?.keys.gemini ? "provider-badge is-added" : "provider-badge"}>
+            {status?.keys.gemini ? "Pridany" : "Chyba"}
+          </span>
           <input type="password" value={geminiApiKey} onChange={(e) => setGeminiApiKey(e.target.value)} />
         </label>
 
         <label>
           Claude API key
+          <span className={status?.keys.claude ? "provider-badge is-added" : "provider-badge"}>
+            {status?.keys.claude ? "Pridany" : "Chyba"}
+          </span>
           <input type="password" value={claudeApiKey} onChange={(e) => setClaudeApiKey(e.target.value)} />
         </label>
 
-        <button className="btn" type="submit">
-          Ulozit
+        <button className="btn create-btn settings-save-btn" type="submit">
+          Uložiť
         </button>
       </form>
 

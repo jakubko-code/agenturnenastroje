@@ -491,8 +491,28 @@ body.is-scrolled .topbar {
   min-width: 160px;
 }
 
+.settings-save-btn {
+  margin-top: 6px;
+}
+
 .required-mark {
   color: #d12525;
+}
+
+.provider-badge {
+  font-size: 12px;
+  font-weight: 500;
+  color: #5f6368;
+  background: #f1f3f4;
+  border: 1px solid #dadce0;
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.provider-badge.is-added {
+  color: #0d652d;
+  background: #e6f4ea;
+  border-color: #a8dab5;
 }
 
 .stack {

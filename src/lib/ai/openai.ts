@@ -1,5 +1,7 @@
 import { AIResult } from "@/types/ai";
 
+const OPENAI_MODEL = "gpt-5";
+
 export async function callOpenAiApi(apiKey: string, prompt: string): Promise<AIResult> {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -8,7 +10,7 @@ export async function callOpenAiApi(apiKey: string, prompt: string): Promise<AIR
       Authorization: `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: "gpt-5",
+      model: OPENAI_MODEL,
       messages: [{ role: "user", content: prompt }],
       temperature: 1
     })
@@ -38,6 +40,7 @@ export async function callOpenAiApi(apiKey: string, prompt: string): Promise<AIR
       : null;
 
   return {
+    model: data?.model ? String(data.model) : OPENAI_MODEL,
     text: String(text).trim(),
     usage: { inputTokens, outputTokens, totalTokens }
   };

@@ -157,7 +157,7 @@ export function RsaForm() {
         </div>
 
         <button className="btn create-btn" type="submit" disabled={loading}>
-          {loading ? "GENERUJEM..." : "Generuj"}
+          {loading ? "Generujem ..." : "Generuj"}
         </button>
       </section>
 

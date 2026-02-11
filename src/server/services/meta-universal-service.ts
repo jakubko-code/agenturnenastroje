@@ -28,7 +28,7 @@ export async function generateMetaUniversalTexts(args: {
       userId: args.userId,
       toolName: "meta_universal",
       provider: args.model,
-      model: args.model,
+      model: aiResult.model,
       inputJson: args.formData,
       outputText: aiResult.text,
       inputTokens: aiResult.usage.inputTokens,
