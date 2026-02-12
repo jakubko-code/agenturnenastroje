@@ -972,6 +972,27 @@ td {
   margin-top: 8px;
 }
 
+.ebitda-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ebitda-muted {
+  margin: 0;
+  color: #5f6368;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ebitda-note-gap {
+  margin-top: 12px !important;
+}
+
+.ebitda-note-highlight {
+  font-weight: 600;
+}
+
 .audit-form-grid {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
@@ -1040,6 +1061,10 @@ td {
 
 @media (max-width: 1080px) {
   .ecom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ebitda-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -15,6 +15,12 @@ const toolCards = [
     badge: "Google Ads"
   },
   {
+    title: "Audit Google Ads účtu",
+    desc: "Hľbkový audit Google Ads účtu z Full Data Export reportu.",
+    href: "/audit-google-ads-uctu",
+    badge: "Google Ads"
+  },
+  {
     title: "Meta Universal",
     desc: "3 varianty primary textov pre B2B/B2C/sluzby a lokalny biznis.",
     href: "/meta-universal",
@@ -42,6 +48,12 @@ const toolCards = [
     title: "Kalkulačka ziskovosti reklamy",
     desc: "Porovnanie scenarov investicie do reklamy a ziskovosti.",
     href: "/kalkulacka-ziskovosti-reklamy",
+    badge: "Ecommerce"
+  },
+  {
+    title: "EBITDA Break-Even kalkulačka",
+    desc: "Rychle vyhodnotenie CM2, EBITDA, break-even MER a udrzatelneho ad spendu.",
+    href: "/ebitda-break-even-kalkulacka",
     badge: "Ecommerce"
   }
 ] as const satisfies ReadonlyArray<{

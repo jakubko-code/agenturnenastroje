@@ -41,7 +41,8 @@ export function TopNav() {
   const isGoogleActive = pathname === "/rsa" || pathname === "/sts-insights" || pathname === "/audit-google-ads-uctu";
   const isMetaActive = pathname === "/meta-universal" || pathname === "/meta-texty-pre-produkty";
   const isGuidesActive = pathname === "/navody" || pathname === "/google-ads-scripts";
-  const isEcommerceActive = pathname === "/kalkulacka-ziskovosti-reklamy";
+  const isEcommerceActive =
+    pathname === "/kalkulacka-ziskovosti-reklamy" || pathname === "/ebitda-break-even-kalkulacka";
   const isBrandActive = pathname === "/detailny-popis-cielovej-skupiny" || pathname === "/tvorba-tone-of-voice";
 
   function toggleMenu(menu: MenuKey) {
@@ -161,6 +162,13 @@ export function TopNav() {
               className={pathname === "/kalkulacka-ziskovosti-reklamy" ? "is-active" : ""}
             >
               Kalkulačka ziskovosti reklamy
+            </Link>
+            <Link
+              href="/ebitda-break-even-kalkulacka"
+              role="menuitem"
+              className={pathname === "/ebitda-break-even-kalkulacka" ? "is-active" : ""}
+            >
+              EBITDA Break-Even kalkulačka
             </Link>
           </div>
         ) : null}
