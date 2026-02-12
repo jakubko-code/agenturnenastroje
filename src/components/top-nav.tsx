@@ -38,7 +38,7 @@ export function TopNav() {
     setOpenMenu(null);
   }, [pathname]);
 
-  const isGoogleActive = pathname === "/rsa" || pathname === "/sts-insights";
+  const isGoogleActive = pathname === "/rsa" || pathname === "/sts-insights" || pathname === "/audit-google-ads-uctu";
   const isMetaActive = pathname === "/meta-universal";
   const isGuidesActive = pathname === "/navody" || pathname === "/google-ads-scripts";
   const isEcommerceActive = pathname === "/kalkulacka-ziskovosti-reklamy";
@@ -103,6 +103,13 @@ export function TopNav() {
             </Link>
             <Link href="/sts-insights" role="menuitem" className={pathname === "/sts-insights" ? "is-active" : ""}>
               Insights zo search terms
+            </Link>
+            <Link
+              href="/audit-google-ads-uctu"
+              role="menuitem"
+              className={pathname === "/audit-google-ads-uctu" ? "is-active" : ""}
+            >
+              Audit Google Ads účtu
             </Link>
           </div>
         ) : null}

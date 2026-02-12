@@ -1,3 +1,5 @@
+import { ToneOfVoiceForm } from "@/components/tone-of-voice-form";
+
 export default function ToneOfVoicePage() {
   return (
     <section className="tool-page">
@@ -16,6 +18,7 @@ export default function ToneOfVoicePage() {
           </span>
         </p>
       </div>
+      <ToneOfVoiceForm />
     </section>
   );
 }

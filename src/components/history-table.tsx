@@ -22,6 +22,9 @@ function getToolDisplayName(toolName: string): string {
   if (toolName === "meta_universal") return "Generovanie reklamných textov pre META Ads (AI)";
   if (toolName === "rsa") return "Generovanie RSA reklám pre Google Ads (AI)";
   if (toolName === "sts_insights") return "(AI) Insights zo search terms";
+  if (toolName === "audience_definition") return "(AI) Detailný popis cieľovej skupiny";
+  if (toolName === "tone_of_voice") return "(AI) Tvorba Tone-of-voice";
+  if (toolName === "audit_google_ads") return "(AI) Audit Google Ads účtu";
   return toolName;
 }
 

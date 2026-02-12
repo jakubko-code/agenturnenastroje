@@ -448,8 +448,9 @@ body.is-scrolled .topbar {
 
 .tool-main-card h3,
 .tool-side-card h3 {
-  margin: 0 0 4px;
-  font-size: 20px;
+  margin: 14px 0 6px;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .tool-side-card {
@@ -971,8 +972,80 @@ td {
   margin-top: 8px;
 }
 
+.audit-form-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 14px;
+  align-items: start;
+}
+
+.audit-form-grid > * {
+  min-width: 0;
+}
+
+.audit-field {
+  display: block;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.audit-field > input,
+.audit-field > textarea {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.audit-field > input {
+  min-height: 44px;
+}
+
+.audit-field > textarea {
+  min-height: 84px;
+}
+
+.audit-form-grid input,
+.audit-form-grid textarea {
+  width: 100%;
+}
+
+.audience-html-output {
+  line-height: 1.55;
+}
+
+.audience-html-output h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  color: #202124;
+}
+
+.audience-html-output h3 {
+  margin: 12px 0 6px;
+  font-size: 16px;
+  color: #202124;
+}
+
+.audience-html-output p {
+  margin: 0 0 10px;
+}
+
+.audience-html-output ul {
+  margin: 0 0 12px;
+  padding-left: 20px;
+}
+
+.audience-html-output li {
+  margin-bottom: 6px;
+}
+
 @media (max-width: 1080px) {
   .ecom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 960px) {
+  .audit-form-grid {
     grid-template-columns: 1fr;
   }
 }

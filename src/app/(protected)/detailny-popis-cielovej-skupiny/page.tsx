@@ -1,3 +1,5 @@
+import { AudienceDefinitionForm } from "@/components/audience-definition-form";
+
 export default function AudienceDescriptionPage() {
   return (
     <section className="tool-page">
@@ -14,6 +16,7 @@ export default function AudienceDescriptionPage() {
           </span>
         </p>
       </div>
+      <AudienceDefinitionForm />
     </section>
   );
 }

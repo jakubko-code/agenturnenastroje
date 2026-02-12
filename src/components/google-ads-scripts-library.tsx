@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SEARCH_TERMS_SCRIPT = `/**
  * Search Terms - Aktuálne vs. Predchádzajúce obdobie (v1)
@@ -347,36 +347,84 @@ function deleteEmptySheets_(spreadsheet) {
 }`;
 
 export function GoogleAdsScriptsLibrary() {
-  const [open, setOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [openItem, setOpenItem] = useState<"search" | "full" | null>(null);
+  const [copiedItem, setCopiedItem] = useState<"search" | "full" | null>(null);
+  const [fullDataScript, setFullDataScript] = useState("");
+  const [fullDataError, setFullDataError] = useState("");
 
-  async function onCopy() {
-    await navigator.clipboard.writeText(SEARCH_TERMS_SCRIPT);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+  useEffect(() => {
+    if (openItem !== "full" || fullDataScript) return;
+    fetch("/scripts/full_data_export.gs")
+      .then(async (res) => {
+        if (!res.ok) throw new Error("Nepodarilo sa nacitat script Full_Data_Export.");
+        return res.text();
+      })
+      .then((text) => {
+        setFullDataScript(text);
+        setFullDataError("");
+      })
+      .catch((err: Error) => setFullDataError(err.message));
+  }, [openItem, fullDataScript]);
+
+  async function onCopy(item: "search" | "full") {
+    const text = item === "search" ? SEARCH_TERMS_SCRIPT : fullDataScript;
+    if (!text) return;
+    await navigator.clipboard.writeText(text);
+    setCopiedItem(item);
+    setTimeout(() => setCopiedItem(null), 1500);
   }
 
   return (
-    <div className="script-accordion" id="search-terms-script">
-      <button
-        type="button"
-        className={open ? "script-accordion-header is-open" : "script-accordion-header"}
-        onClick={() => setOpen((prev) => !prev)}
-      >
-        <span>Google Ads Script: Search_Terms_Script</span>
-        <span className={open ? "history-arrow is-open" : "history-arrow"}>▾</span>
-      </button>
+    <div className="script-accordion">
+      <div id="search-terms-script">
+        <button
+          type="button"
+          className={openItem === "search" ? "script-accordion-header is-open" : "script-accordion-header"}
+          onClick={() => setOpenItem((prev) => (prev === "search" ? null : "search"))}
+        >
+          <span>Google Ads Script: Search_Terms_Script</span>
+          <span className={openItem === "search" ? "history-arrow is-open" : "history-arrow"}>▾</span>
+        </button>
 
-      {open ? (
-        <div className="script-accordion-body">
-          <div className="button-row">
-            <button type="button" className="btn btn-secondary" onClick={onCopy}>
-              {copied ? "Skopírované" : "Kopírovať script"}
-            </button>
+        {openItem === "search" ? (
+          <div className="script-accordion-body">
+            <div className="button-row">
+              <button type="button" className="btn btn-secondary" onClick={() => onCopy("search")}>
+                {copiedItem === "search" ? "Skopírované" : "Kopírovať script"}
+              </button>
+            </div>
+            <pre className="script-code">{SEARCH_TERMS_SCRIPT}</pre>
           </div>
-          <pre className="script-code">{SEARCH_TERMS_SCRIPT}</pre>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
+
+      <div id="full-data-export-script">
+        <button
+          type="button"
+          className={openItem === "full" ? "script-accordion-header is-open" : "script-accordion-header"}
+          onClick={() => setOpenItem((prev) => (prev === "full" ? null : "full"))}
+        >
+          <span>Google Ads Script: Full_Data_Export</span>
+          <span className={openItem === "full" ? "history-arrow is-open" : "history-arrow"}>▾</span>
+        </button>
+
+        {openItem === "full" ? (
+          <div className="script-accordion-body">
+            <div className="button-row">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => onCopy("full")}
+                disabled={!fullDataScript}
+              >
+                {copiedItem === "full" ? "Skopírované" : "Kopírovať script"}
+              </button>
+            </div>
+            {fullDataError ? <p className="error-box">{fullDataError}</p> : null}
+            <pre className="script-code">{fullDataScript || "Nacitam script..."}</pre>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
