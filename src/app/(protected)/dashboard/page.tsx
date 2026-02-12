@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import type { Route } from "next";
+import { useMemo, useState } from "react";
 
 function getBadgeClass(badge: string): string {
   if (badge === "Google Ads") return "tool-badge tool-badge-google";
@@ -76,6 +79,12 @@ const toolCards = [
     desc: "Rýchly odhad klikov, nákladov, objednávok, tržby, ROAS a CPA pred spustením kampaní.",
     href: "/kalkulacka-potencialu-kampane",
     badge: "Ecommerce"
+  },
+  {
+    title: "EBITDA Scaling simulator",
+    desc: "Simulácia škálovania objednávok, marketingového rozpočtu, CM3 a EBITDA.",
+    href: "/ebitda-scaling-simulator",
+    badge: "Ecommerce"
   }
 ] as const satisfies ReadonlyArray<{
   title: string;
@@ -86,23 +95,70 @@ const toolCards = [
 }>;
 
 export default function DashboardPage() {
+  const [activeBadge, setActiveBadge] = useState<string>("Všetky");
+  const [query, setQuery] = useState("");
+
+  const badgeFilters = useMemo(() => {
+    const unique = Array.from(new Set(toolCards.map((tool) => tool.badge)));
+    return ["Všetky", "AI", ...unique];
+  }, []);
+
+  const filteredTools = useMemo(() => {
+    const byBadge =
+      activeBadge === "Všetky"
+        ? toolCards
+        : activeBadge === "AI"
+          ? toolCards.filter((tool) => "isAi" in tool && tool.isAi)
+          : toolCards.filter((tool) => tool.badge === activeBadge);
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return byBadge;
+
+    return byBadge.filter((tool) =>
+      [tool.title, tool.desc, tool.badge, "isAi" in tool && tool.isAi ? "ai" : ""].join(" ").toLowerCase().includes(normalizedQuery)
+    );
+  }, [activeBadge, query]);
+
   return (
     <section className="dashboard-shell">
       <div className="hero-block">
-        <p className="hero-kicker">Agenturne AI studio</p>
-        <h1>Spustaj nastroje pre kampane z jedneho miesta</h1>
+        <h1>Praktické AI a analytické nástroje pre Google Ads, Meta Ads, Ecommerce, ...</h1>
         <p>
-          Vyber si nastroj, priprav brief a generuj vystupy pre Google Ads a Meta kampane.
-          Dashboard je navrhnuty pre rychlu internu produkciu v agenture.
+          Vyber si nástroj podľa typu práce, vyplň vstupy a získaj použiteľný výstup. Od tvorby textov cez audit až po
+          ekonomické kalkulačky na plánovanie výkonu.
         </p>
       </div>
 
+      <div className="dashboard-tools-controls">
+        <div className="dashboard-search-wrap">
+          <input
+            type="text"
+            className="dashboard-search-input"
+            placeholder="Vyhľadať nástroj..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
+
+        <div className="chip-group dashboard-filter-group">
+          {badgeFilters.map((badge) => (
+            <button
+              key={badge}
+              type="button"
+              className={activeBadge === badge ? "chip-btn is-selected" : "chip-btn"}
+              onClick={() => setActiveBadge(badge)}
+            >
+              {badge}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="tool-grid">
-        {toolCards.map((tool) => (
+        {filteredTools.map((tool) => (
           <Link key={tool.href} href={tool.href} className="tool-tile">
             <div className="tool-badges">
               <span className={getBadgeClass(tool.badge)}>{tool.badge}</span>
-              {tool.isAi ? <span className="tool-badge tool-badge-ai">AI</span> : null}
+              {"isAi" in tool && tool.isAi ? <span className="tool-badge tool-badge-ai">AI</span> : null}
             </div>
             <h3>{tool.title}</h3>
             <p>{tool.desc}</p>

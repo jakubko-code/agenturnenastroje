@@ -5,7 +5,7 @@ export default function GoogleAdsScriptsPage() {
     <section className="tool-page">
       <div className="page-head">
         <h1>Google Ads Scripts</h1>
-        <p>Na tejto stránke nájdeš skripty, ktoré si kolegovia môžu skopírovať a vložiť do Google Ads.</p>
+        <p>Tu nájdeš skripty, ktoré využiješ na stiahnutie dát pre potreby AI analýz.</p>
       </div>
       <GoogleAdsScriptsLibrary />
     </section>

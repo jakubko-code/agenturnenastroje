@@ -70,7 +70,7 @@ export function RsaForm() {
   return (
     <form onSubmit={onSubmit} className="tool-stack">
       <section className="card tool-main-card">
-        <label>Typ klienta:</label>
+        <label>Typ biznisu:</label>
         <div className="chip-group">
           {CLIENT_TYPES.map((value) => (
             <button
@@ -79,54 +79,90 @@ export function RsaForm() {
               className={formData.clientType === value ? "chip-btn is-selected" : "chip-btn"}
               onClick={() => setField("clientType", value)}
             >
-              {value === "eshop" ? "E-shop" : "Sluzba"}
+              {value === "eshop" ? "E-shop" : "Služba"}
             </button>
           ))}
         </div>
 
         <label>
-          Produkt/sluzba: <span className="required-mark">*</span>
-          <textarea value={formData.productService} onChange={(e) => setField("productService", e.target.value)} />
+          Služba/produkt: <span className="required-mark">*</span>
+          <textarea
+            value={formData.productService}
+            onChange={(e) => setField("productService", e.target.value)}
+            placeholder="Jasne popíš produkt/kategóriu e-shopu alebo službu..."
+          />
         </label>
 
         <label>
-          Cielova skupina:
-          <textarea value={formData.targetAudience} onChange={(e) => setField("targetAudience", e.target.value)} />
+          Cieľová skupina:
+          <textarea
+            value={formData.targetAudience}
+            onChange={(e) => setField("targetAudience", e.target.value)}
+            placeholder="Kto sú (demografia), čo pravdepodobne vyhľadávajú (problémy), čo chcú (výsledok)..."
+          />
         </label>
 
         <label>
-          Hladane vyrazy, na ktore cielis: <span className="required-mark">*</span>
-          <textarea value={formData.keywords} onChange={(e) => setField("keywords", e.target.value)} />
+          Hľadané výrazy, na ktoré cieliš: <span className="required-mark">*</span>
+          <textarea
+            value={formData.keywords}
+            onChange={(e) => setField("keywords", e.target.value)}
+            placeholder="Uveď 5–10 presných alebo frázových kľúčových slov..."
+          />
         </label>
 
         <label>
-          Hlavne predajne argumenty (USP):
-          <textarea value={formData.usp} onChange={(e) => setField("usp", e.target.value)} />
+          Hlavné predajné argumenty (USP):
+          <textarea
+            value={formData.usp}
+            onChange={(e) => setField("usp", e.target.value)}
+            placeholder="Konkrétne vlastnosti produktu, benefity, odlíšenie od konkurencie..."
+          />
         </label>
 
         <label>
-          Signaly doveryhodnosti:
-          <textarea value={formData.trustSignals} onChange={(e) => setField("trustSignals", e.target.value)} />
+          Signály dôveryhodnosti:
+          <textarea
+            value={formData.trustSignals}
+            onChange={(e) => setField("trustSignals", e.target.value)}
+            placeholder="Hodnotenia, certifikácie, roky na trhu..."
+          />
         </label>
 
         <label>
-          Najcastejsie namietky zakaznikov:
-          <textarea value={formData.objections} onChange={(e) => setField("objections", e.target.value)} />
+          Najčastejšie námietky zákazníkov:
+          <textarea
+            value={formData.objections}
+            onChange={(e) => setField("objections", e.target.value)}
+            placeholder="Aké sú najčastejšie pochybnosti alebo obavy, ktoré bránia zákazníkom v nákupe? Napr. vysoká cena, nedôvera v kvalitu, zložitosť použitia, dĺžka dodania..."
+          />
         </label>
 
         <label>
-          Spustace urgencie / CTA:
-          <textarea value={formData.cta} onChange={(e) => setField("cta", e.target.value)} />
+          Spúšťače urgencie / CTA:
+          <textarea
+            value={formData.cta}
+            onChange={(e) => setField("cta", e.target.value)}
+            placeholder="Časovo obmedzené akcie, limitovaná dostupnosť..."
+          />
         </label>
 
         <label>
-          Ton komunikacie:
-          <input value={formData.tone} onChange={(e) => setField("tone", e.target.value)} />
+          Tón komunikácie:
+          <input
+            value={formData.tone}
+            onChange={(e) => setField("tone", e.target.value)}
+            placeholder="Profesionálny, Priamy a urgentný, Empatický..."
+          />
         </label>
 
         <label>
           URL webu:
-          <input value={formData.url} onChange={(e) => setField("url", e.target.value)} />
+          <input
+            value={formData.url}
+            onChange={(e) => setField("url", e.target.value)}
+            placeholder="https://www.vas-eshop.sk"
+          />
         </label>
       </section>
 
