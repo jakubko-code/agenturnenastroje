@@ -21,6 +21,7 @@ type Row = {
 function getToolDisplayName(toolName: string): string {
   if (toolName === "meta_universal") return "Generovanie reklamných textov pre META Ads (AI)";
   if (toolName === "rsa") return "Generovanie RSA reklám pre Google Ads (AI)";
+  if (toolName === "sts_insights") return "(AI) Insights zo search terms";
   return toolName;
 }
 

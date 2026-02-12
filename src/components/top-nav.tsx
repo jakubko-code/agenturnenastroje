@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-type MenuKey = "google" | "meta";
+type MenuKey = "google" | "meta" | "guides" | "ecommerce";
 
 export function TopNav() {
   const pathname = usePathname();
@@ -38,8 +38,10 @@ export function TopNav() {
     setOpenMenu(null);
   }, [pathname]);
 
-  const isGoogleActive = pathname === "/rsa";
+  const isGoogleActive = pathname === "/rsa" || pathname === "/sts-insights";
   const isMetaActive = pathname === "/meta-universal";
+  const isGuidesActive = pathname === "/navody" || pathname === "/google-ads-scripts";
+  const isEcommerceActive = pathname === "/kalkulacka-ziskovosti-reklamy";
 
   function toggleMenu(menu: MenuKey) {
     setOpenMenu((prev) => (prev === menu ? null : menu));
@@ -65,7 +67,10 @@ export function TopNav() {
         {openMenu === "google" ? (
           <div className="menu-dropdown" role="menu">
             <Link href="/rsa" role="menuitem" className={pathname === "/rsa" ? "is-active" : ""}>
-              RSA reklamy
+              Tvorba RSA reklám
+            </Link>
+            <Link href="/sts-insights" role="menuitem" className={pathname === "/sts-insights" ? "is-active" : ""}>
+              Insights zo search terms
             </Link>
           </div>
         ) : null}
@@ -86,6 +91,57 @@ export function TopNav() {
           <div className="menu-dropdown" role="menu">
             <Link href="/meta-universal" role="menuitem" className={pathname === "/meta-universal" ? "is-active" : ""}>
               Meta Universal
+            </Link>
+          </div>
+        ) : null}
+      </div>
+
+      <div className="menu-group">
+        <button
+          type="button"
+          className={isEcommerceActive || openMenu === "ecommerce" ? "menu-trigger is-active" : "menu-trigger"}
+          onClick={() => toggleMenu("ecommerce")}
+          aria-expanded={openMenu === "ecommerce"}
+          aria-haspopup="menu"
+        >
+          Ecommerce <span className="menu-arrow">▾</span>
+        </button>
+
+        {openMenu === "ecommerce" ? (
+          <div className="menu-dropdown" role="menu">
+            <Link
+              href="/kalkulacka-ziskovosti-reklamy"
+              role="menuitem"
+              className={pathname === "/kalkulacka-ziskovosti-reklamy" ? "is-active" : ""}
+            >
+              Kalkulačka ziskovosti reklamy
+            </Link>
+          </div>
+        ) : null}
+      </div>
+
+      <div className="menu-group">
+        <button
+          type="button"
+          className={isGuidesActive || openMenu === "guides" ? "menu-trigger is-active" : "menu-trigger"}
+          onClick={() => toggleMenu("guides")}
+          aria-expanded={openMenu === "guides"}
+          aria-haspopup="menu"
+        >
+          Návody & Scripty <span className="menu-arrow">▾</span>
+        </button>
+
+        {openMenu === "guides" ? (
+          <div className="menu-dropdown" role="menu">
+            <Link href="/navody" role="menuitem" className={pathname === "/navody" ? "is-active" : ""}>
+              Návody
+            </Link>
+            <Link
+              href="/google-ads-scripts"
+              role="menuitem"
+              className={pathname === "/google-ads-scripts" ? "is-active" : ""}
+            >
+              Google Ads Scripts
             </Link>
           </div>
         ) : null}

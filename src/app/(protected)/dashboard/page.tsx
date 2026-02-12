@@ -9,6 +9,12 @@ const toolCards = [
     badge: "Google Ads"
   },
   {
+    title: "STS insighty",
+    desc: "Insights zo search terms s odporucaniami pre dalsie kroky v kampaniach.",
+    href: "/sts-insights",
+    badge: "Google Ads"
+  },
+  {
     title: "Meta Universal",
     desc: "3 varianty primary textov pre B2B/B2C/sluzby a lokalny biznis.",
     href: "/meta-universal",

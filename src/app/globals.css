@@ -156,6 +156,7 @@ body.is-scrolled .topbar {
 .menu-dropdown a {
   padding: 8px 10px;
   border-radius: 8px;
+  font-size: 14px;
 }
 
 .menu-dropdown a:hover {
@@ -402,9 +403,14 @@ body.is-scrolled .topbar {
   color: rgb(26, 115, 232);
 }
 
+.inline-link {
+  color: #1a73e8;
+  text-decoration: underline;
+}
+
 .section-title {
   margin: 0;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .users-section-title {
@@ -780,6 +786,195 @@ td {
   font-size: 13px;
   font-weight: 500;
   color: #202124;
+}
+
+.script-accordion {
+  display: grid;
+  gap: 0;
+}
+
+.script-accordion-header {
+  width: 100%;
+  border: 0;
+  border-bottom: 3px solid rgb(232, 234, 237);
+  background: transparent;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 4px;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 600;
+  color: #3c4043;
+}
+
+.script-accordion-body {
+  padding: 12px 4px 18px;
+  border-bottom: 3px solid rgb(232, 234, 237);
+  margin-bottom: 4px;
+  display: grid;
+  gap: 10px;
+}
+
+.script-code {
+  margin: 0;
+  white-space: pre-wrap;
+  background: rgb(248, 249, 250);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #202124;
+}
+
+.ecom-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ecom-card {
+  background: rgb(248, 249, 250);
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  align-content: start;
+}
+
+.ecom-note {
+  background: rgb(248, 249, 250);
+}
+
+.ecom-note p {
+  margin: 0;
+  color: #202124;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.ecom-form-group {
+  display: block;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #202124;
+}
+
+.ecom-form-group .ecom-input-wrap {
+  margin-top: 8px;
+}
+
+.ecom-input-wrap {
+  position: relative;
+}
+
+.ecom-input-wrap input {
+  width: 100%;
+  min-height: 44px;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 10px 36px 10px 12px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ecom-input-wrap span {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #202124;
+  font-size: 14px;
+}
+
+.ecom-summary {
+  margin-top: 6px;
+  padding: 12px 0;
+  border-top: 3px solid rgb(232, 234, 237);
+  border-bottom: 3px solid rgb(232, 234, 237);
+  display: grid;
+  gap: 10px;
+}
+
+.ecom-summary .ecom-row {
+  border-bottom: 0;
+}
+
+.ecom-table {
+  display: grid;
+}
+
+.ecom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e8eaed;
+  font-size: 14px;
+}
+
+.ecom-table .ecom-row:last-child {
+  border-bottom: 0;
+}
+
+.ecom-row .value {
+  font-weight: 700;
+  font-size: 1.02rem;
+}
+
+.ecom-row .value.positive {
+  color: #34a853;
+}
+
+.ecom-row .value.negative {
+  color: #ea4335;
+}
+
+.ecom-card .section-title {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e8eaed;
+}
+
+.text-red {
+  color: #c5221f;
+}
+
+.text-blue {
+  color: #4285f4;
+}
+
+.ecom-guide {
+  background: rgb(248, 249, 250);
+  font-size: 14px;
+  line-height: 1.6;
+  color: #202124;
+}
+
+.ecom-guide p {
+  margin: 0 0 10px;
+}
+
+.ecom-guide ol {
+  margin: 0 0 12px;
+  padding-left: 20px;
+}
+
+.ecom-guide li {
+  margin-bottom: 12px;
+}
+
+.ecom-guide li p {
+  margin-top: 8px;
+}
+
+@media (max-width: 1080px) {
+  .ecom-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 1080px) {
