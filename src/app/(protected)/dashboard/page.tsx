@@ -21,6 +21,12 @@ const toolCards = [
     badge: "Meta Ads"
   },
   {
+    title: "Produktové Meta texty",
+    desc: "3 originálne varianty produktových reklamných textov pre Meta Ads.",
+    href: "/meta-texty-pre-produkty",
+    badge: "Meta Ads"
+  },
+  {
     title: "Detailný popis cieľovej skupiny",
     desc: "AI nastroj pre detailny strategicky popis cielovej skupiny.",
     href: "/detailny-popis-cielovej-skupiny",

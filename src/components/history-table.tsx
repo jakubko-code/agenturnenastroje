@@ -25,6 +25,7 @@ function getToolDisplayName(toolName: string): string {
   if (toolName === "audience_definition") return "(AI) Detailný popis cieľovej skupiny";
   if (toolName === "tone_of_voice") return "(AI) Tvorba Tone-of-voice";
   if (toolName === "audit_google_ads") return "(AI) Audit Google Ads účtu";
+  if (toolName === "meta_product_texts") return "(AI) Generovanie produktových reklamných textov pre META Ads";
   return toolName;
 }
 

@@ -39,7 +39,7 @@ export function TopNav() {
   }, [pathname]);
 
   const isGoogleActive = pathname === "/rsa" || pathname === "/sts-insights" || pathname === "/audit-google-ads-uctu";
-  const isMetaActive = pathname === "/meta-universal";
+  const isMetaActive = pathname === "/meta-universal" || pathname === "/meta-texty-pre-produkty";
   const isGuidesActive = pathname === "/navody" || pathname === "/google-ads-scripts";
   const isEcommerceActive = pathname === "/kalkulacka-ziskovosti-reklamy";
   const isBrandActive = pathname === "/detailny-popis-cielovej-skupiny" || pathname === "/tvorba-tone-of-voice";
@@ -129,7 +129,14 @@ export function TopNav() {
         {openMenu === "meta" ? (
           <div className="menu-dropdown" role="menu">
             <Link href="/meta-universal" role="menuitem" className={pathname === "/meta-universal" ? "is-active" : ""}>
-              Meta Universal
+              Univerzálne Meta texty
+            </Link>
+            <Link
+              href="/meta-texty-pre-produkty"
+              role="menuitem"
+              className={pathname === "/meta-texty-pre-produkty" ? "is-active" : ""}
+            >
+              Produktové Meta texty
             </Link>
           </div>
         ) : null}
