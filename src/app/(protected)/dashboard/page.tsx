@@ -19,6 +19,24 @@ const toolCards = [
     desc: "3 varianty primary textov pre B2B/B2C/sluzby a lokalny biznis.",
     href: "/meta-universal",
     badge: "Meta Ads"
+  },
+  {
+    title: "Detailný popis cieľovej skupiny",
+    desc: "AI nastroj pre detailny strategicky popis cielovej skupiny.",
+    href: "/detailny-popis-cielovej-skupiny",
+    badge: "Brand & Stratégia"
+  },
+  {
+    title: "Tvorba Tone-of-voice",
+    desc: "AI nastroj pre vytvorenie tone-of-voice manualu znacky.",
+    href: "/tvorba-tone-of-voice",
+    badge: "Brand & Stratégia"
+  },
+  {
+    title: "Kalkulačka ziskovosti reklamy",
+    desc: "Porovnanie scenarov investicie do reklamy a ziskovosti.",
+    href: "/kalkulacka-ziskovosti-reklamy",
+    badge: "Ecommerce"
   }
 ] as const satisfies ReadonlyArray<{
   title: string;

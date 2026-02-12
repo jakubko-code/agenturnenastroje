@@ -54,6 +54,9 @@ export function UserMenu({ signOutAction }: UserMenuProps) {
 
       {open ? (
         <div className="user-menu-dropdown">
+          <Link href="/historia" onClick={() => setOpen(false)}>
+            História generovania
+          </Link>
           <Link href="/nastavenia" onClick={() => setOpen(false)}>
             Nastavenia
           </Link>

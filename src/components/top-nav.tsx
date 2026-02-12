@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-type MenuKey = "google" | "meta" | "guides" | "ecommerce";
+type MenuKey = "google" | "meta" | "guides" | "ecommerce" | "brand";
 
 export function TopNav() {
   const pathname = usePathname();
@@ -42,6 +42,7 @@ export function TopNav() {
   const isMetaActive = pathname === "/meta-universal";
   const isGuidesActive = pathname === "/navody" || pathname === "/google-ads-scripts";
   const isEcommerceActive = pathname === "/kalkulacka-ziskovosti-reklamy";
+  const isBrandActive = pathname === "/detailny-popis-cielovej-skupiny" || pathname === "/tvorba-tone-of-voice";
 
   function toggleMenu(menu: MenuKey) {
     setOpenMenu((prev) => (prev === menu ? null : menu));
@@ -52,6 +53,37 @@ export function TopNav() {
       <Link href="/dashboard" className={pathname === "/dashboard" ? "top-link is-active" : "top-link"}>
         Dashboard
       </Link>
+
+      <div className="menu-group">
+        <button
+          type="button"
+          className={isBrandActive || openMenu === "brand" ? "menu-trigger is-active" : "menu-trigger"}
+          onClick={() => toggleMenu("brand")}
+          aria-expanded={openMenu === "brand"}
+          aria-haspopup="menu"
+        >
+          Brand & Stratégia <span className="menu-arrow">▾</span>
+        </button>
+
+        {openMenu === "brand" ? (
+          <div className="menu-dropdown" role="menu">
+            <Link
+              href="/detailny-popis-cielovej-skupiny"
+              role="menuitem"
+              className={pathname === "/detailny-popis-cielovej-skupiny" ? "is-active" : ""}
+            >
+              Detailný popis cieľovej skupiny
+            </Link>
+            <Link
+              href="/tvorba-tone-of-voice"
+              role="menuitem"
+              className={pathname === "/tvorba-tone-of-voice" ? "is-active" : ""}
+            >
+              Tvorba Tone-of-voice
+            </Link>
+          </div>
+        ) : null}
+      </div>
 
       <div className="menu-group">
         <button
@@ -147,9 +179,6 @@ export function TopNav() {
         ) : null}
       </div>
 
-      <Link href="/historia" className={pathname === "/historia" ? "top-link is-active" : "top-link"}>
-        História generovania
-      </Link>
     </nav>
   );
 }
