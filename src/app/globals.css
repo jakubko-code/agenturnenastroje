@@ -381,6 +381,10 @@ body.is-scrolled .topbar {
   font-weight: 500;
 }
 
+.page-head-ai {
+  color: rgb(26, 115, 232);
+}
+
 .section-title {
   margin: 0;
   font-size: 24px;

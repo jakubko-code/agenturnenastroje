@@ -4,7 +4,9 @@ export default function MetaUniversalPage() {
   return (
     <section className="tool-page">
       <div className="page-head">
-        <h1>Generovanie reklamných textov pre META Ads (AI)</h1>
+        <h1>
+          <span className="page-head-ai">(AI)</span> Generovanie reklamných textov pre META Ads
+        </h1>
         <p>
           Tento nástroj slúži na rýchle a efektívne vytváranie reklamných textov (Primary Text) pre kampane na
           platforme Meta. Jeho hlavnou výhodou je univerzálnosť. Je navrhnutý tak, aby dokázal generovať relevantné a
