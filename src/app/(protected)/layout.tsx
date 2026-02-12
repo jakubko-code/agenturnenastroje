@@ -7,6 +7,8 @@ import { UserMenu } from "@/components/user-menu";
 
 export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
+  const userLabel = session?.user?.name || session?.user?.email || "U";
+  const userInitial = userLabel.trim().charAt(0).toUpperCase();
   const signOutAction = async () => {
     "use server";
     await signOut({ redirectTo: "/login" });
@@ -29,6 +31,13 @@ export default async function ProtectedLayout({ children }: { children: React.Re
 
         <div className="topbar-right">
           <span className="user-pill">{session.user.email}</span>
+          {session.user.image ? (
+            <img src={session.user.image} alt="Profilova fotka" className="user-avatar" />
+          ) : (
+            <span className="user-avatar user-avatar-fallback" aria-hidden="true">
+              {userInitial}
+            </span>
+          )}
           <UserMenu signOutAction={signOutAction} />
         </div>
       </header>

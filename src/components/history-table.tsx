@@ -7,6 +7,7 @@ type Row = {
   toolName: string;
   provider?: string | null;
   model: string;
+  inputJson?: unknown;
   status: string;
   createdAt: string;
   inputTokens?: number | null;
@@ -21,6 +22,16 @@ function getToolDisplayName(toolName: string): string {
   if (toolName === "meta_universal") return "Generovanie reklamných textov pre META Ads (AI)";
   if (toolName === "rsa") return "Generovanie RSA reklám pre Google Ads (AI)";
   return toolName;
+}
+
+function formatInput(input: unknown): string {
+  if (input === null || typeof input === "undefined") return "";
+  if (typeof input === "string") return input;
+  try {
+    return JSON.stringify(input, null, 2);
+  } catch {
+    return String(input);
+  }
 }
 
 export function HistoryTable() {
@@ -60,6 +71,7 @@ export function HistoryTable() {
             row.provider ?? "",
             row.model ?? "",
             row.status ?? "",
+            formatInput(row.inputJson),
             row.outputText ?? "",
             row.errorMessage ?? "",
             new Date(row.createdAt).toLocaleString()
@@ -114,8 +126,21 @@ export function HistoryTable() {
 
                 {isOpen ? (
                   <div className="history-accordion-body">
+                    {row.inputJson ? (
+                      <>
+                        <p className="history-section-title">Vstup používateľa</p>
+                        <pre className="result-box">{formatInput(row.inputJson)}</pre>
+                      </>
+                    ) : null}
                     {row.errorMessage ? <p className="error-box">{row.errorMessage}</p> : null}
-                    {row.outputText ? <pre className="result-box">{row.outputText}</pre> : <p className="hint-text">Bez vystupu.</p>}
+                    {row.outputText ? (
+                      <>
+                        <p className="history-section-title">Výstup AI</p>
+                        <pre className="result-box">{row.outputText}</pre>
+                      </>
+                    ) : (
+                      <p className="hint-text">Bez vystupu.</p>
+                    )}
                     <p className="history-token-detail">
                       Input tokeny: {row.inputTokens ?? "-"} | Output tokeny: {row.outputTokens ?? "-"}
                     </p>
