@@ -4,6 +4,7 @@ import { auth, signOut } from "@/auth";
 import { ScrollBorderToggle } from "@/components/scroll-border-toggle";
 import { TopNav } from "@/components/top-nav";
 import { UserMenu } from "@/components/user-menu";
+import { getReportingPageAccess } from "@/server/services/page-access-service";
 
 export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -18,6 +19,8 @@ export default async function ProtectedLayout({ children }: { children: React.Re
     redirect("/login");
   }
 
+  const reportingAccess = await getReportingPageAccess(session.user.id);
+
   return (
     <div className="app-shell">
       <ScrollBorderToggle />
@@ -27,7 +30,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
           <span>Interné nástroje</span>
         </Link>
 
-        <TopNav />
+        <TopNav reportingAccess={reportingAccess} />
 
         <div className="topbar-right">
           <span className="user-pill">{session.user.email}</span>

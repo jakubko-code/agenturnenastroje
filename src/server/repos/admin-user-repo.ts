@@ -2,7 +2,7 @@ import { UserRole } from "@prisma/client";
 import { db } from "@/lib/db";
 
 export async function listUsersForAdmin() {
-  return db.user.findMany({
+  const users = await db.user.findMany({
     orderBy: { createdAt: "desc" },
     select: {
       id: true,
@@ -11,8 +11,30 @@ export async function listUsersForAdmin() {
       role: true,
       isActive: true,
       createdAt: true,
-      updatedAt: true
+      updatedAt: true,
+      pageAccesses: {
+        select: {
+          page: true
+        }
+      }
     }
+  });
+
+  return users.map((user) => {
+    const pageSet = new Set(user.pageAccesses.map((row) => row.page));
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      isActive: user.isActive,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      pageAccess: {
+        reportingGoogleAds: pageSet.has("reporting_google_ads"),
+        reportingMetaAds: pageSet.has("reporting_meta_ads")
+      }
+    };
   });
 }
 

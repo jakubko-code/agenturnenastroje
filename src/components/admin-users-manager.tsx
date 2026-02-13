@@ -8,6 +8,10 @@ type UserRow = {
   name: string | null;
   role: "admin" | "editor" | "viewer";
   isActive: boolean;
+  pageAccess: {
+    reportingGoogleAds: boolean;
+    reportingMetaAds: boolean;
+  };
   createdAt: string;
   updatedAt: string;
 };
@@ -21,6 +25,7 @@ export function AdminUsersManager() {
   const [rows, setRows] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [savingAccessKey, setSavingAccessKey] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
 
@@ -37,7 +42,15 @@ export function AdminUsersManager() {
         return;
       }
 
-      setRows(data.users ?? []);
+      setRows(
+        (data.users ?? []).map((row) => ({
+          ...row,
+          pageAccess: row.pageAccess ?? {
+            reportingGoogleAds: false,
+            reportingMetaAds: false
+          }
+        }))
+      );
     } catch {
       setError("Nepodarilo sa nacitat pouzivatelov.");
     } finally {
@@ -84,6 +97,62 @@ export function AdminUsersManager() {
     }
   }
 
+  async function changePageAccess(
+    userId: string,
+    page: "reporting_google_ads" | "reporting_meta_ads",
+    allowed: boolean
+  ) {
+    const saveKey = `${userId}:${page}`;
+    setSavingAccessKey(saveKey);
+    setError("");
+    setInfo("");
+
+    try {
+      const response = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, page, allowed })
+      });
+
+      const data = (await response.json()) as {
+        access?: {
+          userId: string;
+          page: "reporting_google_ads" | "reporting_meta_ads";
+          allowed: boolean;
+          updatedAt?: string;
+        };
+        error?: { code: string; message: string };
+      };
+
+      if (!response.ok) {
+        setError(data.error?.message ?? "Nepodarilo sa zmenit pristup na stranku.");
+        return;
+      }
+
+      setRows((prev) =>
+        prev.map((row) => {
+          if (row.id !== userId) return row;
+
+          const nextAccess =
+            page === "reporting_google_ads"
+              ? { ...row.pageAccess, reportingGoogleAds: allowed }
+              : { ...row.pageAccess, reportingMetaAds: allowed };
+
+          return {
+            ...row,
+            pageAccess: nextAccess,
+            updatedAt: data.access?.updatedAt ?? row.updatedAt
+          };
+        })
+      );
+      setInfo("Pristup bol aktualizovany.");
+    } catch {
+      setError("Nepodarilo sa zmenit pristup na stranku.");
+    } finally {
+      setSavingAccessKey(null);
+    }
+  }
+
   if (loading) {
     return <p>Nacitavam pouzivatelov...</p>;
   }
@@ -101,6 +170,8 @@ export function AdminUsersManager() {
               <th>Meno</th>
               <th>Rola</th>
               <th>Status</th>
+              <th>RGA</th>
+              <th>RMA</th>
               <th>Vytvoreny</th>
               <th>Naposledy zmeneny</th>
             </tr>
@@ -122,6 +193,24 @@ export function AdminUsersManager() {
                   </select>
                 </td>
                 <td>{row.isActive ? "active" : "inactive"}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={row.pageAccess.reportingGoogleAds}
+                    onChange={(e) => changePageAccess(row.id, "reporting_google_ads", e.target.checked)}
+                    disabled={savingAccessKey === `${row.id}:reporting_google_ads`}
+                    aria-label={`Reporting Google Ads pristup pre ${row.email}`}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={row.pageAccess.reportingMetaAds}
+                    onChange={(e) => changePageAccess(row.id, "reporting_meta_ads", e.target.checked)}
+                    disabled={savingAccessKey === `${row.id}:reporting_meta_ads`}
+                    aria-label={`Reporting Meta Ads pristup pre ${row.email}`}
+                  />
+                </td>
                 <td>{new Date(row.createdAt).toLocaleString()}</td>
                 <td>{new Date(row.updatedAt).toLocaleString()}</td>
               </tr>

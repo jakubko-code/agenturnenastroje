@@ -10,8 +10,8 @@ export default async function LoginPage() {
   return (
     <main className="center-wrap">
       <section className="card login-card">
-        <h1>Agenturne AI nastroje</h1>
-        <p>Prihlasenie je povolene iba cez firemny Google ucet.</p>
+        <h1>Vivantina - interné nástroje</h1>
+        <p>Prihlásenie je povolené iba cez firemný Google účet.</p>
         <form
           action={async () => {
             "use server";
@@ -19,7 +19,7 @@ export default async function LoginPage() {
           }}
         >
           <button className="btn" type="submit">
-            Prihlasit cez Google
+            Prihlásiť sa Google účtom
           </button>
         </form>
       </section>

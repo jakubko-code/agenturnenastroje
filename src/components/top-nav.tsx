@@ -4,9 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-type MenuKey = "google" | "meta" | "guides" | "ecommerce" | "brand";
+type MenuKey = "google" | "meta" | "guides" | "ecommerce" | "brand" | "reporting";
 
-export function TopNav() {
+type TopNavProps = {
+  reportingAccess: {
+    reportingGoogleAds: boolean;
+    reportingMetaAds: boolean;
+  };
+};
+
+export function TopNav({ reportingAccess }: TopNavProps) {
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState<MenuKey | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
@@ -50,6 +57,10 @@ export function TopNav() {
     pathname === "/ebitda-break-even-kalkulacka" ||
     pathname === "/ebitda-scaling-simulator";
   const isBrandActive = pathname === "/detailny-popis-cielovej-skupiny" || pathname === "/tvorba-tone-of-voice";
+  const isReportingActive =
+    (reportingAccess.reportingGoogleAds && pathname === "/reporting-google-ads") ||
+    (reportingAccess.reportingMetaAds && pathname === "/reporting-meta-ads");
+  const canSeeReportingRoot = reportingAccess.reportingGoogleAds || reportingAccess.reportingMetaAds;
 
   function toggleMenu(menu: MenuKey) {
     setOpenMenu((prev) => (prev === menu ? null : menu));
@@ -193,6 +204,47 @@ export function TopNav() {
           </div>
         ) : null}
       </div>
+
+      {canSeeReportingRoot ? (
+        <div className="menu-group">
+          <button
+            type="button"
+            className={
+              isReportingActive || openMenu === "reporting"
+                ? "menu-trigger reporting-root is-active"
+                : "menu-trigger reporting-root"
+            }
+            onClick={() => toggleMenu("reporting")}
+            aria-expanded={openMenu === "reporting"}
+            aria-haspopup="menu"
+          >
+            Reporting <span className="menu-arrow">▾</span>
+          </button>
+
+          {openMenu === "reporting" ? (
+            <div className="menu-dropdown" role="menu">
+              {reportingAccess.reportingGoogleAds ? (
+                <Link
+                  href="/reporting-google-ads"
+                  role="menuitem"
+                  className={pathname === "/reporting-google-ads" ? "reporting-link is-active" : "reporting-link"}
+                >
+                  Reporting Google Ads
+                </Link>
+              ) : null}
+              {reportingAccess.reportingMetaAds ? (
+                <Link
+                  href="/reporting-meta-ads"
+                  role="menuitem"
+                  className={pathname === "/reporting-meta-ads" ? "reporting-link is-active" : "reporting-link"}
+                >
+                  Reporting Meta Ads
+                </Link>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="menu-group">
         <button

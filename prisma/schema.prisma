@@ -29,6 +29,11 @@ enum RunStatus {
   error
 }
 
+enum RestrictedPage {
+  reporting_google_ads
+  reporting_meta_ads
+}
+
 model User {
   id             String            @id @default(cuid())
   name           String?
@@ -45,6 +50,7 @@ model User {
   auditEvents    AuditEvent[]      @relation("actor")
   accounts       Account[]
   sessions       Session[]
+  pageAccesses   UserPageAccess[]
 }
 
 model ProviderSetting {
@@ -119,6 +125,18 @@ model AuditEvent {
 
   @@index([createdAt(sort: Desc)])
   @@index([actorUserId, createdAt(sort: Desc)])
+}
+
+model UserPageAccess {
+  id        String         @id @default(cuid())
+  userId    String
+  page      RestrictedPage
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, page])
+  @@index([page, userId])
 }
 
 model Account {
