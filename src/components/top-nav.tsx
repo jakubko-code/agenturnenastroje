@@ -50,7 +50,10 @@ export function TopNav({ reportingAccess }: TopNavProps) {
     pathname === "/sts-insights" ||
     pathname === "/audit-google-ads-uctu" ||
     pathname === "/kalkulacka-potencialu-kampane";
-  const isMetaActive = pathname === "/meta-universal" || pathname === "/meta-texty-pre-produkty";
+  const isMetaActive =
+    pathname === "/meta-universal" ||
+    pathname === "/meta-texty-pre-produkty" ||
+    pathname === "/meta-ads-library-scraper";
   const isGuidesActive = pathname === "/navody" || pathname === "/google-ads-scripts";
   const isEcommerceActive =
     pathname === "/kalkulacka-ziskovosti-reklamy" ||
@@ -162,6 +165,13 @@ export function TopNav({ reportingAccess }: TopNavProps) {
               className={pathname === "/meta-texty-pre-produkty" ? "is-active" : ""}
             >
               Produktové Meta texty
+            </Link>
+            <Link
+              href="/meta-ads-library-scraper"
+              role="menuitem"
+              className={pathname === "/meta-ads-library-scraper" ? "is-active" : ""}
+            >
+              Meta Ads scraper + AI analýza
             </Link>
           </div>
         ) : null}

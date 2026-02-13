@@ -367,7 +367,7 @@ body.is-scrolled .topbar {
   border-radius: 999px;
   padding: 0 14px;
   line-height: 38px;
-  font-size: 14px;
+  font-size: 13px;
   box-sizing: border-box;
   margin: 0;
 }
@@ -440,6 +440,7 @@ body.is-scrolled .topbar {
 
 .tool-tile p {
   margin: 0;
+  font-size: 15px;
   color: var(--muted);
   line-height: 1.45;
 }
@@ -447,7 +448,7 @@ body.is-scrolled .topbar {
 .tool-cta {
   margin-top: 4px;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   color: #1a73e8;
 }
 

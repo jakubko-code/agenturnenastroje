@@ -49,6 +49,13 @@ const toolCards = [
     isAi: true
   },
   {
+    title: "Meta Ads scraper + AI analýza",
+    desc: "Scraping reklám z Meta Ads Library a ich analýza pomocou AI.",
+    href: "/meta-ads-library-scraper",
+    badge: "Meta Ads",
+    isAi: true
+  },
+  {
     title: "Detailný popis cieľovej skupiny",
     desc: "AI nástroj pre detailný strategický popis cieľovej skupiny.",
     href: "/detailny-popis-cielovej-skupiny",
@@ -100,14 +107,14 @@ export default function DashboardPage() {
 
   const badgeFilters = useMemo(() => {
     const unique = Array.from(new Set(toolCards.map((tool) => tool.badge)));
-    return ["Všetky", "AI", ...unique];
+    return ["Všetky", "AI nástroje", ...unique];
   }, []);
 
   const filteredTools = useMemo(() => {
     const byBadge =
       activeBadge === "Všetky"
         ? toolCards
-        : activeBadge === "AI"
+        : activeBadge === "AI nástroje"
           ? toolCards.filter((tool) => "isAi" in tool && tool.isAi)
           : toolCards.filter((tool) => tool.badge === activeBadge);
     const normalizedQuery = query.trim().toLowerCase();
@@ -120,14 +127,6 @@ export default function DashboardPage() {
 
   return (
     <section className="dashboard-shell">
-      <div className="hero-block">
-        <h1>Praktické AI a analytické nástroje pre Google Ads, Meta Ads, Ecommerce, ...</h1>
-        <p>
-          Vyber si nástroj podľa typu práce, vyplň vstupy a získaj použiteľný výstup. Od tvorby textov cez audit až po
-          ekonomické kalkulačky na plánovanie výkonu.
-        </p>
-      </div>
-
       <div className="dashboard-tools-controls">
         <div className="dashboard-search-wrap">
           <input

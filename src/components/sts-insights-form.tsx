@@ -33,11 +33,11 @@ export function StsInsightsForm() {
 
     const sheetUrl = formData.sheetUrl.trim();
     if (!sheetUrl) {
-      setError("Prosim, zadaj URL Google Sheetu so search terms.");
+      setError("Prosím, zadaj URL Google Sheetu so search terms.");
       return;
     }
     if (!sheetUrl.startsWith("https://docs.google.com/spreadsheets/")) {
-      setError("Vyzera to, ze URL nie je Google Sheet. Skontroluj prosim odkaz.");
+      setError("Vyzerá to, ze URL nie je Google Sheet. Skontroluj prosím odkaz.");
       return;
     }
 
@@ -81,7 +81,7 @@ export function StsInsightsForm() {
             type="text"
             value={formData.sheetUrl}
             onChange={(e) => setField("sheetUrl", e.target.value)}
-            placeholder="Vloz URL spreadsheetu, kde bezi Search_Terms_Script"
+            placeholder="Vlož URL spreadsheetu, kde beži Search_Terms_Script"
           />
         </label>
 
@@ -101,7 +101,7 @@ export function StsInsightsForm() {
           <textarea
             value={formData.businessDesc}
             onChange={(e) => setField("businessDesc", e.target.value)}
-            placeholder="Napis, co klient predava, ake znacky, cielovu skupinu, hlavne USP…"
+            placeholder="Napíš, čo klient predáva, aké značky, cieľovú skupinu, hlavne USP …"
           />
         </label>
         <p className="hint-text">
