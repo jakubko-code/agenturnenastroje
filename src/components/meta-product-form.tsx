@@ -106,14 +106,14 @@ export function MetaProductForm() {
             className={model === "gemini" ? "model-btn is-selected" : "model-btn"}
             onClick={() => setModel("gemini")}
           >
-            Gemini 2.5 PRO
+            Gemini 3 PRO Preview
           </button>
           <button
             type="button"
             className={model === "openai" ? "model-btn is-selected" : "model-btn"}
             onClick={() => setModel("openai")}
           >
-            GPT-5
+            ChatGPT 5.2
           </button>
           <button
             type="button"

@@ -92,6 +92,12 @@ const toolCards = [
     desc: "Simulácia škálovania objednávok, marketingového rozpočtu, CM3 a EBITDA.",
     href: "/ebitda-scaling-simulator",
     badge: "Ecommerce"
+  },
+  {
+    title: "Markdown konvertor",
+    desc: "Konverzia markdown výstupu z AI do čistého textu.",
+    href: "/markdown-konvertor",
+    badge: "Návody & Scripty"
   }
 ] as const satisfies ReadonlyArray<{
   title: string;

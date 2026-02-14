@@ -54,7 +54,7 @@ export function TopNav({ reportingAccess }: TopNavProps) {
     pathname === "/meta-universal" ||
     pathname === "/meta-texty-pre-produkty" ||
     pathname === "/meta-ads-library-scraper";
-  const isGuidesActive = pathname === "/navody" || pathname === "/google-ads-scripts";
+  const isGuidesActive = pathname === "/navody" || pathname === "/google-ads-scripts" || pathname === "/markdown-konvertor";
   const isEcommerceActive =
     pathname === "/kalkulacka-ziskovosti-reklamy" ||
     pathname === "/ebitda-break-even-kalkulacka" ||
@@ -278,6 +278,9 @@ export function TopNav({ reportingAccess }: TopNavProps) {
               className={pathname === "/google-ads-scripts" ? "is-active" : ""}
             >
               Google Ads Scripts
+            </Link>
+            <Link href="/markdown-konvertor" role="menuitem" className={pathname === "/markdown-konvertor" ? "is-active" : ""}>
+              Markdown konvertor
             </Link>
           </div>
         ) : null}

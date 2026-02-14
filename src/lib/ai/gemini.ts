@@ -1,6 +1,6 @@
 import { AIResult } from "@/types/ai";
 
-const GEMINI_MODEL = "gemini-2.5-pro";
+const GEMINI_MODEL = "gemini-3-pro-preview";
 
 export async function callGeminiApi(apiKey: string, prompt: string): Promise<AIResult> {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;

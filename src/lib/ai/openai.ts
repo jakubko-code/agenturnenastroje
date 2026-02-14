@@ -1,6 +1,6 @@
 import { AIResult } from "@/types/ai";
 
-const OPENAI_MODEL = "gpt-5";
+const OPENAI_MODEL = "gpt-5.2";
 
 export async function callOpenAiApi(apiKey: string, prompt: string): Promise<AIResult> {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {

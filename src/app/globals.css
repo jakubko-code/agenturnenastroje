@@ -398,7 +398,7 @@ body.is-scrolled .topbar {
 .tool-badge {
   width: fit-content;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 4TE00;
   letter-spacing: 0.02em;
   color: #fff;
   background: #5f6368;
@@ -436,6 +436,7 @@ body.is-scrolled .topbar {
 .tool-tile h3 {
   margin: 0;
   font-size: 22px;
+  font-weight: 500;
 }
 
 .tool-tile p {
@@ -1440,6 +1441,30 @@ td {
 
 .audience-html-output li {
   margin-bottom: 6px;
+}
+
+.markdown-preview {
+  line-height: 1.45;
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3 {
+  margin: 0 0 6px;
+}
+
+.markdown-preview p {
+  margin: 0 0 4px;
+}
+
+.markdown-preview ul,
+.markdown-preview ol {
+  margin: 0 0 6px;
+  padding-left: 18px;
+}
+
+.markdown-preview li {
+  margin-bottom: 2px;
 }
 
 @media (max-width: 1080px) {

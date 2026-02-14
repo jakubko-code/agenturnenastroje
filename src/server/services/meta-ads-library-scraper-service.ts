@@ -360,15 +360,48 @@ function normalizeMetaAdsItems(items: unknown[]): NormalizedMetaAd[] {
       extractStringFieldFromArray(cards, "cta_type")[0] ??
       null;
     const rawId = firstString(row.id) ?? firstString(row.ad_archive_id) ?? firstString(row.adArchiveId);
-    const payerBeneficiaryData = mapPayerBeneficiary(row.payer_beneficiary_data);
-    const targetsEu = firstBoolean(row.targets_eu);
-    const hasViolatingPayerBeneficiary = firstBoolean(row.has_violating_payer_beneficiary);
-    const isAdTakenDown = firstBoolean(row.is_ad_taken_down);
-    const locationAudience = mapLocationAudience(row.location_audience);
-    const genderAudience = firstString(row.gender_audience);
-    const ageAudience = mapAgeAudience(row.age_audience);
-    const euTotalReach = firstNumber(row.eu_total_reach);
-    const ageCountryGenderReachBreakdown = mapReachBreakdown(row.age_country_gender_reach_breakdown);
+    const aaaInfo = getObject(row.aaa_info) ?? {};
+    const transparencyByLocation = getObject(row.transparency_by_location) ?? {};
+    const euTransparency = getObject(transparencyByLocation.eu_transparency) ?? {};
+
+    const payerBeneficiaryData =
+      mapPayerBeneficiary(row.payer_beneficiary_data).length > 0
+        ? mapPayerBeneficiary(row.payer_beneficiary_data)
+        : mapPayerBeneficiary(aaaInfo.payer_beneficiary_data).length > 0
+          ? mapPayerBeneficiary(aaaInfo.payer_beneficiary_data)
+          : mapPayerBeneficiary(euTransparency.payer_beneficiary_data);
+    const targetsEu =
+      firstBoolean(row.targets_eu) ??
+      firstBoolean(aaaInfo.targets_eu) ??
+      firstBoolean(euTransparency.targets_eu);
+    const hasViolatingPayerBeneficiary =
+      firstBoolean(row.has_violating_payer_beneficiary) ??
+      firstBoolean(aaaInfo.has_violating_payer_beneficiary);
+    const isAdTakenDown = firstBoolean(row.is_ad_taken_down) ?? firstBoolean(aaaInfo.is_ad_taken_down);
+    const locationAudience =
+      mapLocationAudience(row.location_audience).length > 0
+        ? mapLocationAudience(row.location_audience)
+        : mapLocationAudience(aaaInfo.location_audience).length > 0
+          ? mapLocationAudience(aaaInfo.location_audience)
+          : mapLocationAudience(euTransparency.location_audience);
+    const genderAudience =
+      firstString(row.gender_audience) ??
+      firstString(aaaInfo.gender_audience) ??
+      firstString(euTransparency.gender_audience);
+    const ageAudience =
+      mapAgeAudience(row.age_audience) ??
+      mapAgeAudience(aaaInfo.age_audience) ??
+      mapAgeAudience(euTransparency.age_audience);
+    const euTotalReach =
+      firstNumber(row.eu_total_reach) ??
+      firstNumber(aaaInfo.eu_total_reach) ??
+      firstNumber(euTransparency.eu_total_reach);
+    const ageCountryGenderReachBreakdown =
+      mapReachBreakdown(row.age_country_gender_reach_breakdown).length > 0
+        ? mapReachBreakdown(row.age_country_gender_reach_breakdown)
+        : mapReachBreakdown(aaaInfo.age_country_gender_reach_breakdown).length > 0
+          ? mapReachBreakdown(aaaInfo.age_country_gender_reach_breakdown)
+          : mapReachBreakdown(euTransparency.age_country_gender_reach_breakdown);
 
     return {
       page_name: pageName,
