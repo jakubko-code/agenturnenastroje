@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
-import { ScrollBorderToggle } from "@/components/scroll-border-toggle";
 import { TopNav } from "@/components/top-nav";
 import { UserMenu } from "@/components/user-menu";
 import { getReportingPageAccess } from "@/server/services/page-access-service";
@@ -23,28 +22,28 @@ export default async function ProtectedLayout({ children }: { children: React.Re
 
   return (
     <div className="app-shell">
-      <ScrollBorderToggle />
-      <header className="topbar">
-        <Link href="/dashboard" className="brand-mark">
-          <img src="/logo.png" alt="" className="brand-logo" />
-          <span>Interné nástroje</span>
-        </Link>
+      <aside className="sidebar">
+        <div className="sidebar-brand">
+          <Link href="/dashboard" className="brand-mark">
+            <img src="/logo.png" alt="" className="brand-logo" />
+            <span>Interné nástroje</span>
+          </Link>
+        </div>
 
         <TopNav reportingAccess={reportingAccess} />
 
-        <div className="topbar-right">
-          <span className="user-pill">{session.user.email}</span>
-          {session.user.image ? (
-            <img src={session.user.image} alt="Profilova fotka" className="user-avatar" />
-          ) : (
-            <span className="user-avatar user-avatar-fallback" aria-hidden="true">
-              {userInitial}
-            </span>
-          )}
-          <UserMenu signOutAction={signOutAction} />
+        <div className="sidebar-footer">
+          <UserMenu
+            signOutAction={signOutAction}
+            userInitial={userInitial}
+            userName={userLabel}
+            userEmail={session.user.email}
+            userImage={session.user.image}
+          />
         </div>
-      </header>
-      <main className="content">{children}</main>
+      </aside>
+
+      <main className="page-content">{children}</main>
     </div>
   );
 }

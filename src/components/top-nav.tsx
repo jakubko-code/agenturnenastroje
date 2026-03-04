@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type MenuKey = "google" | "meta" | "guides" | "ecommerce" | "brand" | "reporting";
 
@@ -15,277 +15,191 @@ type TopNavProps = {
 
 export function TopNav({ reportingAccess }: TopNavProps) {
   const pathname = usePathname();
-  const [openMenu, setOpenMenu] = useState<MenuKey | null>(null);
-  const navRef = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    function onDocumentClick(event: MouseEvent) {
-      if (!navRef.current) return;
-      const target = event.target as Node;
-      if (!navRef.current.contains(target)) {
-        setOpenMenu(null);
-      }
-    }
-
-    function onEsc(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setOpenMenu(null);
-      }
-    }
-
-    document.addEventListener("mousedown", onDocumentClick);
-    document.addEventListener("keydown", onEsc);
-    return () => {
-      document.removeEventListener("mousedown", onDocumentClick);
-      document.removeEventListener("keydown", onEsc);
-    };
-  }, []);
-
-  useEffect(() => {
-    setOpenMenu(null);
-  }, [pathname]);
-
-  const isGoogleActive =
-    pathname === "/rsa" ||
-    pathname === "/sts-insights" ||
-    pathname === "/audit-google-ads-uctu" ||
-    pathname === "/kalkulacka-potencialu-kampane";
-  const isMetaActive =
-    pathname === "/meta-universal" ||
-    pathname === "/meta-texty-pre-produkty" ||
-    pathname === "/meta-ads-library-scraper";
-  const isGuidesActive = pathname === "/navody" || pathname === "/google-ads-scripts" || pathname === "/markdown-konvertor";
-  const isEcommerceActive =
-    pathname === "/kalkulacka-ziskovosti-reklamy" ||
-    pathname === "/ebitda-break-even-kalkulacka" ||
-    pathname === "/ebitda-scaling-simulator";
-  const isBrandActive = pathname === "/detailny-popis-cielovej-skupiny" || pathname === "/tvorba-tone-of-voice";
+  const isGoogleActive = ["/rsa", "/sts-insights", "/audit-google-ads-uctu", "/kalkulacka-potencialu-kampane"].includes(pathname);
+  const isMetaActive = ["/meta-universal", "/meta-texty-pre-produkty", "/meta-ads-library-scraper"].includes(pathname);
+  const isGuidesActive = ["/navody", "/google-ads-scripts", "/markdown-konvertor"].includes(pathname);
+  const isEcommerceActive = ["/kalkulacka-ziskovosti-reklamy", "/ebitda-break-even-kalkulacka", "/ebitda-scaling-simulator"].includes(pathname);
+  const isBrandActive = ["/detailny-popis-cielovej-skupiny", "/tvorba-tone-of-voice"].includes(pathname);
   const isReportingActive =
     (reportingAccess.reportingGoogleAds && pathname === "/reporting-google-ads") ||
     (reportingAccess.reportingMetaAds && pathname === "/reporting-meta-ads");
   const canSeeReportingRoot = reportingAccess.reportingGoogleAds || reportingAccess.reportingMetaAds;
+
+  function defaultOpen(): MenuKey | null {
+    if (isGoogleActive) return "google";
+    if (isMetaActive) return "meta";
+    if (isGuidesActive) return "guides";
+    if (isEcommerceActive) return "ecommerce";
+    if (isBrandActive) return "brand";
+    if (isReportingActive) return "reporting";
+    return null;
+  }
+
+  const [openMenu, setOpenMenu] = useState<MenuKey | null>(defaultOpen);
+
+  useEffect(() => {
+    setOpenMenu(defaultOpen());
+  }, [pathname]);
 
   function toggleMenu(menu: MenuKey) {
     setOpenMenu((prev) => (prev === menu ? null : menu));
   }
 
   return (
-    <nav ref={navRef} className="top-nav" aria-label="Hlavna navigacia">
-      <Link href="/dashboard" className={pathname === "/dashboard" ? "top-link is-active" : "top-link"}>
+    <nav className="side-nav" aria-label="Hlavna navigacia">
+      <Link href="/dashboard" className={pathname === "/dashboard" ? "side-link is-active" : "side-link"}>
         Dashboard
       </Link>
 
-      <div className="menu-group">
+      <div className="side-group">
         <button
           type="button"
-          className={isBrandActive || openMenu === "brand" ? "menu-trigger is-active" : "menu-trigger"}
+          className={isBrandActive || openMenu === "brand" ? "side-trigger is-active" : "side-trigger"}
           onClick={() => toggleMenu("brand")}
           aria-expanded={openMenu === "brand"}
-          aria-haspopup="menu"
         >
-          Brand & Stratégia <span className="menu-arrow">▾</span>
+          Brand & Stratégia <span className={openMenu === "brand" ? "side-arrow is-open" : "side-arrow"}>▾</span>
         </button>
-
-        {openMenu === "brand" ? (
-          <div className="menu-dropdown" role="menu">
-            <Link
-              href="/detailny-popis-cielovej-skupiny"
-              role="menuitem"
-              className={pathname === "/detailny-popis-cielovej-skupiny" ? "is-active" : ""}
-            >
+        {openMenu === "brand" && (
+          <div className="side-submenu">
+            <Link href="/detailny-popis-cielovej-skupiny" className={pathname === "/detailny-popis-cielovej-skupiny" ? "is-active" : ""}>
               Detailný popis cieľovej skupiny
             </Link>
-            <Link
-              href="/tvorba-tone-of-voice"
-              role="menuitem"
-              className={pathname === "/tvorba-tone-of-voice" ? "is-active" : ""}
-            >
+            <Link href="/tvorba-tone-of-voice" className={pathname === "/tvorba-tone-of-voice" ? "is-active" : ""}>
               Tvorba Tone-of-voice
             </Link>
           </div>
-        ) : null}
+        )}
       </div>
 
-      <div className="menu-group">
+      <div className="side-group">
         <button
           type="button"
-          className={isGoogleActive || openMenu === "google" ? "menu-trigger is-active" : "menu-trigger"}
+          className={isGoogleActive || openMenu === "google" ? "side-trigger is-active" : "side-trigger"}
           onClick={() => toggleMenu("google")}
           aria-expanded={openMenu === "google"}
-          aria-haspopup="menu"
         >
-          Google Ads <span className="menu-arrow">▾</span>
+          Google Ads <span className={openMenu === "google" ? "side-arrow is-open" : "side-arrow"}>▾</span>
         </button>
-
-        {openMenu === "google" ? (
-          <div className="menu-dropdown" role="menu">
-            <Link href="/rsa" role="menuitem" className={pathname === "/rsa" ? "is-active" : ""}>
+        {openMenu === "google" && (
+          <div className="side-submenu">
+            <Link href="/rsa" className={pathname === "/rsa" ? "is-active" : ""}>
               Tvorba RSA reklám
             </Link>
-            <Link href="/sts-insights" role="menuitem" className={pathname === "/sts-insights" ? "is-active" : ""}>
+            <Link href="/sts-insights" className={pathname === "/sts-insights" ? "is-active" : ""}>
               Insights zo search terms
             </Link>
-            <Link
-              href="/audit-google-ads-uctu"
-              role="menuitem"
-              className={pathname === "/audit-google-ads-uctu" ? "is-active" : ""}
-            >
+            <Link href="/audit-google-ads-uctu" className={pathname === "/audit-google-ads-uctu" ? "is-active" : ""}>
               Audit Google Ads účtu
             </Link>
-            <Link
-              href="/kalkulacka-potencialu-kampane"
-              role="menuitem"
-              className={pathname === "/kalkulacka-potencialu-kampane" ? "is-active" : ""}
-            >
+            <Link href="/kalkulacka-potencialu-kampane" className={pathname === "/kalkulacka-potencialu-kampane" ? "is-active" : ""}>
               Kalkulačka potenciálu kampane
             </Link>
           </div>
-        ) : null}
+        )}
       </div>
 
-      <div className="menu-group">
+      <div className="side-group">
         <button
           type="button"
-          className={isMetaActive || openMenu === "meta" ? "menu-trigger is-active" : "menu-trigger"}
+          className={isMetaActive || openMenu === "meta" ? "side-trigger is-active" : "side-trigger"}
           onClick={() => toggleMenu("meta")}
           aria-expanded={openMenu === "meta"}
-          aria-haspopup="menu"
         >
-          Meta Ads <span className="menu-arrow">▾</span>
+          Meta Ads <span className={openMenu === "meta" ? "side-arrow is-open" : "side-arrow"}>▾</span>
         </button>
-
-        {openMenu === "meta" ? (
-          <div className="menu-dropdown" role="menu">
-            <Link href="/meta-universal" role="menuitem" className={pathname === "/meta-universal" ? "is-active" : ""}>
+        {openMenu === "meta" && (
+          <div className="side-submenu">
+            <Link href="/meta-universal" className={pathname === "/meta-universal" ? "is-active" : ""}>
               Univerzálne Meta texty
             </Link>
-            <Link
-              href="/meta-texty-pre-produkty"
-              role="menuitem"
-              className={pathname === "/meta-texty-pre-produkty" ? "is-active" : ""}
-            >
+            <Link href="/meta-texty-pre-produkty" className={pathname === "/meta-texty-pre-produkty" ? "is-active" : ""}>
               Produktové Meta texty
             </Link>
-            <Link
-              href="/meta-ads-library-scraper"
-              role="menuitem"
-              className={pathname === "/meta-ads-library-scraper" ? "is-active" : ""}
-            >
+            <Link href="/meta-ads-library-scraper" className={pathname === "/meta-ads-library-scraper" ? "is-active" : ""}>
               Meta Ads scraper + AI analýza
             </Link>
           </div>
-        ) : null}
+        )}
       </div>
 
-      <div className="menu-group">
+      <div className="side-group">
         <button
           type="button"
-          className={isEcommerceActive || openMenu === "ecommerce" ? "menu-trigger is-active" : "menu-trigger"}
+          className={isEcommerceActive || openMenu === "ecommerce" ? "side-trigger is-active" : "side-trigger"}
           onClick={() => toggleMenu("ecommerce")}
           aria-expanded={openMenu === "ecommerce"}
-          aria-haspopup="menu"
         >
-          Ecommerce <span className="menu-arrow">▾</span>
+          Ecommerce <span className={openMenu === "ecommerce" ? "side-arrow is-open" : "side-arrow"}>▾</span>
         </button>
-
-        {openMenu === "ecommerce" ? (
-          <div className="menu-dropdown" role="menu">
-            <Link
-              href="/kalkulacka-ziskovosti-reklamy"
-              role="menuitem"
-              className={pathname === "/kalkulacka-ziskovosti-reklamy" ? "is-active" : ""}
-            >
+        {openMenu === "ecommerce" && (
+          <div className="side-submenu">
+            <Link href="/kalkulacka-ziskovosti-reklamy" className={pathname === "/kalkulacka-ziskovosti-reklamy" ? "is-active" : ""}>
               Kalkulačka ziskovosti reklamy
             </Link>
-            <Link
-              href="/ebitda-break-even-kalkulacka"
-              role="menuitem"
-              className={pathname === "/ebitda-break-even-kalkulacka" ? "is-active" : ""}
-            >
+            <Link href="/ebitda-break-even-kalkulacka" className={pathname === "/ebitda-break-even-kalkulacka" ? "is-active" : ""}>
               EBITDA Break-Even kalkulačka
             </Link>
-            <Link
-              href="/ebitda-scaling-simulator"
-              role="menuitem"
-              className={pathname === "/ebitda-scaling-simulator" ? "is-active" : ""}
-            >
+            <Link href="/ebitda-scaling-simulator" className={pathname === "/ebitda-scaling-simulator" ? "is-active" : ""}>
               EBITDA Scaling simulator
             </Link>
           </div>
-        ) : null}
+        )}
       </div>
 
-      {canSeeReportingRoot ? (
-        <div className="menu-group">
+      <div className="side-divider" />
+
+      {canSeeReportingRoot && (
+        <div className="side-group">
           <button
             type="button"
-            className={
-              isReportingActive || openMenu === "reporting"
-                ? "menu-trigger reporting-root is-active"
-                : "menu-trigger reporting-root"
-            }
+            className={isReportingActive || openMenu === "reporting" ? "side-trigger reporting-root is-active" : "side-trigger reporting-root"}
             onClick={() => toggleMenu("reporting")}
             aria-expanded={openMenu === "reporting"}
-            aria-haspopup="menu"
           >
-            Reporting <span className="menu-arrow">▾</span>
+            Reporting <span className={openMenu === "reporting" ? "side-arrow is-open" : "side-arrow"}>▾</span>
           </button>
-
-          {openMenu === "reporting" ? (
-            <div className="menu-dropdown" role="menu">
-              {reportingAccess.reportingGoogleAds ? (
-                <Link
-                  href="/reporting-google-ads"
-                  role="menuitem"
-                  className={pathname === "/reporting-google-ads" ? "reporting-link is-active" : "reporting-link"}
-                >
+          {openMenu === "reporting" && (
+            <div className="side-submenu">
+              {reportingAccess.reportingGoogleAds && (
+                <Link href="/reporting-google-ads" className={pathname === "/reporting-google-ads" ? "reporting-link is-active" : "reporting-link"}>
                   Reporting Google Ads
                 </Link>
-              ) : null}
-              {reportingAccess.reportingMetaAds ? (
-                <Link
-                  href="/reporting-meta-ads"
-                  role="menuitem"
-                  className={pathname === "/reporting-meta-ads" ? "reporting-link is-active" : "reporting-link"}
-                >
+              )}
+              {reportingAccess.reportingMetaAds && (
+                <Link href="/reporting-meta-ads" className={pathname === "/reporting-meta-ads" ? "reporting-link is-active" : "reporting-link"}>
                   Reporting Meta Ads
                 </Link>
-              ) : null}
+              )}
             </div>
-          ) : null}
+          )}
         </div>
-      ) : null}
+      )}
 
-      <div className="menu-group">
+      <div className="side-group">
         <button
           type="button"
-          className={isGuidesActive || openMenu === "guides" ? "menu-trigger is-active" : "menu-trigger"}
+          className={isGuidesActive || openMenu === "guides" ? "side-trigger is-active" : "side-trigger"}
           onClick={() => toggleMenu("guides")}
           aria-expanded={openMenu === "guides"}
-          aria-haspopup="menu"
         >
-          Návody & Scripty <span className="menu-arrow">▾</span>
+          Návody & Scripty <span className={openMenu === "guides" ? "side-arrow is-open" : "side-arrow"}>▾</span>
         </button>
-
-        {openMenu === "guides" ? (
-          <div className="menu-dropdown" role="menu">
-            <Link href="/navody" role="menuitem" className={pathname === "/navody" ? "is-active" : ""}>
+        {openMenu === "guides" && (
+          <div className="side-submenu">
+            <Link href="/navody" className={pathname === "/navody" ? "is-active" : ""}>
               Návody
             </Link>
-            <Link
-              href="/google-ads-scripts"
-              role="menuitem"
-              className={pathname === "/google-ads-scripts" ? "is-active" : ""}
-            >
+            <Link href="/google-ads-scripts" className={pathname === "/google-ads-scripts" ? "is-active" : ""}>
               Google Ads Scripts
             </Link>
-            <Link href="/markdown-konvertor" role="menuitem" className={pathname === "/markdown-konvertor" ? "is-active" : ""}>
+            <Link href="/markdown-konvertor" className={pathname === "/markdown-konvertor" ? "is-active" : ""}>
               Markdown konvertor
             </Link>
           </div>
-        ) : null}
+        )}
       </div>
-
     </nav>
   );
 }
