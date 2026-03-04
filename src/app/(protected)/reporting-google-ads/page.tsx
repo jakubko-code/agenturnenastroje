@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth";
+import { ReportingGoogleAdsLive } from "@/components/reporting-google-ads-live";
 import { hasRestrictedPageAccess } from "@/server/services/page-access-service";
 
 export default async function ReportingGoogleAdsPage() {
@@ -14,8 +15,10 @@ export default async function ReportingGoogleAdsPage() {
     <section className="tool-page">
       <div className="page-head">
         <h1>Reporting Google Ads</h1>
-        <p>Táto stránka je zatiaľ vo vývoji.</p>
+        <p>Live reporting účtov Google Ads s dátami z Google Sheetu.</p>
       </div>
+
+      <ReportingGoogleAdsLive />
     </section>
   );
 }

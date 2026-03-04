@@ -87,6 +87,16 @@ limit 30;
 3. Deploy staging (Vercel/Cloud Run) and run internal UAT.
 4. Migrate next tool (`meta_ads_product`) to the same API/service pattern.
 
+## Reporting Google Ads on Vercel
+For the `/reporting-google-ads` tool set these env vars in Vercel:
+- `REPORTING_GADS_SPREADSHEET_ID`
+- `REPORTING_GADS_SERVICE_ACCOUNT_EMAIL`
+- `REPORTING_GADS_PRIVATE_KEY` (paste key with escaped newlines `\n`)
+
+Google Sheet requirements:
+- tab `daily_account_stats` must be readable via CSV export URL (sheet publish/share mode),
+- tab `accounts_config` must allow edit access for the service account email.
+
 ## Notes
 - API keys are encrypted before DB write.
 - Provider calls run server-side only.
