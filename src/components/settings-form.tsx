@@ -76,6 +76,24 @@ export function SettingsForm({ canEdit }: { canEdit: boolean }) {
     setClaudeApiKey("");
   }
 
+  async function removeKey(provider: "openai" | "gemini" | "claude") {
+    setMessage("");
+    setError("");
+    const payload = { [`${provider}ApiKey`]: "" };
+    const response = await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      setError(data?.error?.message ?? "Odstránenie zlyhalo.");
+      return;
+    }
+    setStatus(data);
+    setMessage("Kľúč bol odstránený.");
+  }
+
   return (
     <div className="stack">
       <form className="stack" onSubmit={onSubmit}>
@@ -84,6 +102,11 @@ export function SettingsForm({ canEdit }: { canEdit: boolean }) {
           <span className={status?.keys.openai ? "provider-badge is-added" : "provider-badge"}>
             {status?.keys.openai ? "Pridaný" : "Chýba"}
           </span>
+          {canEdit && status?.keys.openai ? (
+            <button type="button" className="btn-remove-key" onClick={() => removeKey("openai")}>
+              Odstrániť
+            </button>
+          ) : null}
           <input type="password" value={openaiApiKey} onChange={(e) => setOpenaiApiKey(e.target.value)} />
         </label>
 
@@ -92,6 +115,11 @@ export function SettingsForm({ canEdit }: { canEdit: boolean }) {
           <span className={status?.keys.gemini ? "provider-badge is-added" : "provider-badge"}>
             {status?.keys.gemini ? "Pridaný" : "Chýba"}
           </span>
+          {canEdit && status?.keys.gemini ? (
+            <button type="button" className="btn-remove-key" onClick={() => removeKey("gemini")}>
+              Odstrániť
+            </button>
+          ) : null}
           <input type="password" value={geminiApiKey} onChange={(e) => setGeminiApiKey(e.target.value)} />
         </label>
 
@@ -100,6 +128,11 @@ export function SettingsForm({ canEdit }: { canEdit: boolean }) {
           <span className={status?.keys.claude ? "provider-badge is-added" : "provider-badge"}>
             {status?.keys.claude ? "Pridaný" : "Chýba"}
           </span>
+          {canEdit && status?.keys.claude ? (
+            <button type="button" className="btn-remove-key" onClick={() => removeKey("claude")}>
+              Odstrániť
+            </button>
+          ) : null}
           <input type="password" value={claudeApiKey} onChange={(e) => setClaudeApiKey(e.target.value)} />
         </label>
 

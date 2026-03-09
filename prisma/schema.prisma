@@ -193,3 +193,38 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model CreativeClient {
+  id                  String          @id @default(cuid())
+  name                String
+  industry            String
+  defaultStyle        String
+  defaultLighting     String
+  defaultColorGrading String
+  defaultAspectRatio  String
+  brandNotes          String?
+  isActive            Boolean         @default(true)
+  createdBy           String
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  runs                AdCreativeRun[]
+}
+
+model AdCreativeRun {
+  id           String         @id @default(cuid())
+  userId       String
+  clientId     String
+  client       CreativeClient @relation(fields: [clientId], references: [id])
+  brief        String
+  platform     String
+  promptJson   Json
+  imagePath    String
+  style        String
+  isWinner     Boolean        @default(false)
+  status       String         @default("success")
+  errorMessage String?
+  createdAt    DateTime       @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([clientId, createdAt(sort: Desc)])
+}

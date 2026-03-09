@@ -85,7 +85,7 @@ const toolCards = [
     title: "Kalkulačka potenciálu kampane",
     desc: "Rýchly odhad klikov, nákladov, objednávok, tržby, ROAS a CPA pred spustením kampaní.",
     href: "/kalkulacka-potencialu-kampane",
-    badge: "Ecommerce"
+    badge: "Google Ads"
   },
   {
     title: "EBITDA Scaling simulator",

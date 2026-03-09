@@ -18,28 +18,51 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID ?? "",
-      clientSecret: process.env.AUTH_GOOGLE_SECRET ?? ""
+      clientSecret: process.env.AUTH_GOOGLE_SECRET ?? "",
+      authorization: {
+        params: {
+          scope: "openid email profile https://www.googleapis.com/auth/drive.file",
+          access_type: "offline",
+          prompt: "consent"
+        }
+      }
     })
   ],
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account }) {
       const email = user.email?.toLowerCase();
       if (!email) return false;
 
+      let allowed = false;
       if (allowedEmails.size > 0 && allowedEmails.has(email)) {
-        return true;
+        allowed = true;
+      } else if (allowedDomain && email.endsWith(`@${allowedDomain}`)) {
+        allowed = true;
       }
 
-      if (allowedDomain) {
-        return email.endsWith(`@${allowedDomain}`);
+      if (!allowed) {
+        await recordAuditEvent({
+          eventType: "auth.sign_in_denied",
+          metadata: { email, allowedDomain }
+        });
+        return false;
       }
 
-      await recordAuditEvent({
-        eventType: "auth.sign_in_denied",
-        metadata: { email, allowedDomain }
-      });
+      // Persist fresh OAuth tokens on every sign-in (PrismaAdapter only calls
+      // linkAccount on first login; subsequent logins leave old tokens in the DB).
+      if (account && user.id) {
+        await db.account.updateMany({
+          where: { userId: user.id, provider: account.provider },
+          data: {
+            access_token: account.access_token,
+            refresh_token: account.refresh_token ?? undefined,
+            expires_at: account.expires_at ?? undefined,
+            scope: account.scope ?? undefined
+          }
+        });
+      }
 
-      return false;
+      return true;
     },
     async session({ session, user }) {
       if (session.user) {

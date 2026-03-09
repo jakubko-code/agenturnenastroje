@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ModelSelector } from "@/components/model-selector";
 
 type Model = "openai" | "gemini" | "claude";
 
@@ -171,30 +172,7 @@ export function MetaAdsLibraryScraperForm() {
       </section>
 
       <section className="card generation-card">
-        <label>Zvoľ si model:</label>
-        <div className="model-button-group">
-          <button
-            type="button"
-            className={model === "gemini" ? "model-btn is-selected" : "model-btn"}
-            onClick={() => setModel("gemini")}
-          >
-            Gemini 3 PRO Preview
-          </button>
-          <button
-            type="button"
-            className={model === "openai" ? "model-btn is-selected" : "model-btn"}
-            onClick={() => setModel("openai")}
-          >
-            ChatGPT 5.2
-          </button>
-          <button
-            type="button"
-            className={model === "claude" ? "model-btn is-selected" : "model-btn"}
-            onClick={() => setModel("claude")}
-          >
-            Claude 3.5 Sonnet
-          </button>
-        </div>
+        <ModelSelector value={model} onChange={setModel} />
 
         <button className="btn create-btn" type="submit" disabled={loading}>
           {loading ? "Generujem ..." : "Generuj analýzu"}

@@ -479,6 +479,7 @@ a {
   box-shadow: 0 6px 18px rgba(11, 20, 32, 0.06);
   display: grid;
   gap: 10px;
+  align-content: start;
 }
 
 .tool-tile:hover {
@@ -489,7 +490,7 @@ a {
 .tool-badge {
   width: fit-content;
   font-size: 12px;
-  font-weight: 4TE00;
+  font-weight: 400;
   letter-spacing: 0.02em;
   color: #fff;
   background: #5f6368;
@@ -573,7 +574,7 @@ a {
 
 .page-head p {
   margin: 16px 0 0;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 1.7;
   color: #5f6368;
@@ -710,6 +711,22 @@ a {
 
 .settings-save-btn {
   margin-top: 6px;
+}
+
+.btn-remove-key {
+  font-size: 12px;
+  font-weight: 500;
+  color: #d12525;
+  background: none;
+  border: 1px solid #d12525;
+  border-radius: 6px;
+  padding: 2px 8px;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+.btn-remove-key:hover {
+  background: #fdf0f0;
 }
 
 .required-mark {
@@ -1652,5 +1669,123 @@ td {
 
   .page-head h1 {
     font-size: 28px;
+  }
+}
+
+/* ─── Ad Creative Generator ────────────────────────────────────────────────── */
+
+.ac-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.ac-panel-left {
+  position: sticky;
+  top: 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.ac-panel-right {
+  display: grid;
+  gap: 14px;
+}
+
+.ac-history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.ac-history-item {
+  position: relative;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #f1f3f4;
+  padding: 0;
+  transition: border-color 0.15s;
+}
+
+.ac-history-item:hover {
+  border-color: var(--brand);
+}
+
+.ac-history-item img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+
+.ac-winner-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #f59e0b;
+  color: #fff;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.ac-history-label {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 6px;
+  font-size: 10px;
+  color: #5f6368;
+  line-height: 1.4;
+  text-align: left;
+  background: #fff;
+}
+
+.ac-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ac-modal {
+  width: min(480px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.ac-detail-modal {
+  width: min(820px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.ac-detail-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .ac-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ac-panel-left {
+    position: static;
+  }
+
+  .ac-detail-inner {
+    grid-template-columns: 1fr;
   }
 }

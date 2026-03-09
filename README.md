@@ -87,6 +87,63 @@ limit 30;
 3. Deploy staging (Vercel/Cloud Run) and run internal UAT.
 4. Migrate next tool (`meta_ads_product`) to the same API/service pattern.
 
+## Ad Creative Generator (`/ad-creative`)
+
+> **⚠️ Stav (2026-03-10): NEDOKONČENÉ – odkaz v menu je skrytý**
+>
+> Kód je pushnutý a stránka `/ad-creative` existuje, ale nástroj nie je aktívny v produkcii.
+> Pred spustením je potrebné donastaviť nasledovné:
+>
+> 1. **Env vars na Verceli** – pridať `ANTHROPIC_API_KEY` a `GEMINI_API_KEY`
+> 2. **DB migrácia** – spustiť voči produkcii: `DATABASE_URL="..." npx prisma migrate deploy`
+> 3. **Seed klientov** – spustiť voči produkcii: `DATABASE_URL="..." node prisma/seed.mjs`
+> 4. **Google Drive API** – zapnúť v Google Cloud Console (rovnaký projekt ako OAuth client)
+> 5. **Odkaz v menu** – pridať späť v `src/components/top-nav.tsx`
+
+Nástroj generuje reklamné kreatívy: Claude API konvertuje text brief → JSON prompt → Gemini API vygeneruje obrázok. Obrázky sa ukladajú na Google Drive prihláseného používateľa.
+
+### Modely v Prisma
+- `CreativeClient` – klientske profily (štýl, osvetlenie, farby, aspect ratio)
+- `AdCreativeRun` – záznamy generovaní (brief, platform, promptJson, imagePath, isWinner)
+
+### Migrations a seed
+```bash
+npx prisma migrate dev --name add-ad-creative
+node prisma/seed.mjs   # vytvorí 3 ukážkových klientov
+```
+
+### Env vars
+```
+ANTHROPIC_API_KEY=        # Claude API (brief → JSON prompt)
+GEMINI_API_KEY=           # Gemini API (image generation)
+```
+
+### Google Drive – nastavenie
+1. **Google Cloud Console → APIs & Services → Library → "Google Drive API" → Enable**
+   - Musí byť zapnuté v tom istom projekte ako OAuth client (skontroluj project ID)
+2. Scope `drive.file` je pridaný do OAuth konfigurácie
+3. Pri každom prihlásení sa čerstvé tokeny (vrátane refresh_token) uložia do DB
+
+### Google Drive – ako to funguje
+- Obrázky sa ukladajú do priečinka `AI Kreatívy / {meno klienta}` na Drive používateľa
+- `imagePath` v DB má formát `drive:{fileId}`
+- Obrázky sa servujú cez auth-chránenú route `/api/ad-creative/outputs/drive:{fileId}`
+- Backward kompatibilita: lokálne súbory (`uploads/ad-creative/...`) stále fungujú
+
+### Dôležité poznatky
+- **Auth.js PrismaAdapter bug**: `linkAccount` sa volá len pri prvom logine. Čerstvé tokeny (refresh_token) sa neukladajú pri ďalších prihláseniach. Oprava: `signIn` callback manuálne robí `updateMany` na Account tabuľke.
+- **Claude wrap do markdown**: Claude niekedy obalí JSON do ` ```json ``` ` blokov aj napriek inštrukcii. Riešenie: strip fences pred `JSON.parse`.
+- **Gemini imageGenerationConfig**: Gemini `generateContent` neprijíma `imageGenerationConfig` v `generationConfig` — hodí 400. Aspect ratio sa nastaví textom v prompte: `"-- Important: compose this image as a {ratio} composition"`.
+- **Webpack cache**: Po `prisma generate` (zmena node_modules) treba zmazať `.next/` a reštartovať dev server.
+
+### Mazanie obrázkov
+Vymaz súbor priamo z Google Drive (priečinok `AI Kreatívy`). Záznam v DB zostane — môžeš ho vymazať:
+```sql
+DELETE FROM "AdCreativeRun" WHERE "imagePath" = 'drive:FILE_ID';
+```
+
+---
+
 ## Reporting Google Ads on Vercel
 For the `/reporting-google-ads` tool set these env vars in Vercel:
 - `REPORTING_GADS_SPREADSHEET_ID`
@@ -96,6 +153,10 @@ For the `/reporting-google-ads` tool set these env vars in Vercel:
 Google Sheet requirements:
 - tab `daily_account_stats` must be readable via CSV export URL (sheet publish/share mode),
 - tab `accounts_config` must allow edit access for the service account email.
+
+Behavior notes:
+- Data reading can work even without service account env vars (CSV export path), but config save/update requires `REPORTING_GADS_SERVICE_ACCOUNT_EMAIL` and `REPORTING_GADS_PRIVATE_KEY`.
+- Reporting API routes are configured for Node.js runtime (not Edge), because Google service-account JWT signing uses Node crypto.
 
 ## Notes
 - API keys are encrypted before DB write.
