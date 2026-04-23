@@ -1022,6 +1022,55 @@ td {
   gap: 10px;
 }
 
+.navod-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.navod-body h3 {
+  margin: 10px 0 2px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.navod-body p,
+.navod-body ol {
+  margin: 0;
+}
+
+.navod-body ol {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.navod-body a {
+  color: #1a73e8;
+  text-decoration: underline;
+}
+
+.navod-body code {
+  background: #f1f3f4;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 13px;
+}
+
+.navod-note {
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: #f0f7ff;
+  border-left: 3px solid #1a73e8;
+  border-radius: 0 6px 6px 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
 .script-code {
   margin: 0;
   white-space: pre-wrap;

@@ -68,6 +68,10 @@ export function ApifySettingsForm() {
           </span>
           <input type="password" value={apifyApiKey} onChange={(e) => setApifyApiKey(e.target.value)} />
         </label>
+        <p className="hint-text">
+          Nemáš ešte Apify účet alebo nevieš kde kľúč nájsť?{" "}
+          <a href="/navody" style={{ color: "#1a73e8" }}>Pozri návod</a>.
+        </p>
 
         <button className="btn create-btn settings-save-btn" type="submit">
           Uložiť
