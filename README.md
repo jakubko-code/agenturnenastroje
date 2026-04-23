@@ -12,6 +12,18 @@ Internal web app migration from Apps Script/Google Sites.
 - Audit events are written for auth/settings/RSA actions.
 - In-memory rate limiting is active on API routes.
 
+## Changelog
+
+### 2026-04-23
+- **Sidebar navigácia**: topbar nahradený ľavým accordion sidebarem; menu sa automaticky zatvára pri navigácii
+- **ModelSelector**: nový zdieľaný komponent — zobrazuje len modely s nakonfigurovaným API kľúčom; nasadený vo všetkých AI formách (RSA, STS, Audit, Meta Universal, Meta Product, Meta Scraper, ToV, Audience)
+- **Nastavenia – odobratie kľúča**: admin môže odstrániť existujúci provider kľúč tlačidlom "Odstrániť"
+- **Nastavenia – Apify**: pridaný odkaz na návod priamo v sekcii Apify kľúča
+- **Návody**: nová stránka `/navody` s accordion návodom na nastavenie Apify API kľúča
+- **Meta Ads scraper**: rozšírený popis nástroja, zmienka o potrebe Apify kľúča s odkazom na Nastavenia
+- **Dashboard**: oprava roztiahnutého `.tool-badges` (align-content: start), oprava font-weight preklepu, badge pre Kalkulačku potenciálu kampane zmenený na "Google Ads"
+- **Ad Creative Generator**: kód pushnutý, odkaz v menu skrytý — čaká na donastavenie (env vars, DB migrácia, Google Drive API)
+
 ## Included
 - Google SSO (Auth.js)
 - Role-aware API (`admin`, `editor`, `viewer`)
